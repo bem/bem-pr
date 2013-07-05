@@ -46,9 +46,11 @@ exports.techMixin = {
                 bemhtmlDecl.parse(depsByTechsJs.bemhtml || []);
                 bemhtmlDecl.parse(depsByTechsTestJs.bemhtml || []);
 
-                bemhtmlDecl = { deps: bemhtmlDecl.serialize()['bemhtml']['bemhtml'] };
+                bemhtmlDecl = { deps: (bemhtmlDecl.serialize()['bemhtml'] || {})['bemhtml'] || [] };
 
-                var bemhtmlResults = getTechBuildResults('bemhtml', bemhtmlDecl, context, output, opts);
+                var bemhtmlResults = bemhtmlDecl.deps.length ?
+                    getTechBuildResults('bemhtml', bemhtmlDecl, context, output, opts) :
+                    '';
 
                 return Q.all([testJsResults, browserJsResults, bemhtmlResults])
                     .spread(function(testJsResults, browserJsResults, bemhtmlResults) {
