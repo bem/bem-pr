@@ -1,4 +1,5 @@
-var QFS = require('bem/node_modules/q-fs'),
+var BEM = require('bem'),
+    QFS = BEM.require('bem'),
     DEPS = require('bem/lib/techs/deps.js'),
     PATH = require('path');
 

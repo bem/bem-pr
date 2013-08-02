@@ -1,5 +1,6 @@
+*.iml
 .project
 .settings
-.bem/snapshots
-.bem/cache
-node_modules
+.bem/snapshots/
+.bem/cache/
+node_modules/

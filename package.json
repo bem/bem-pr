@@ -10,7 +10,7 @@
     "phantomjs": "~1.9.1",
     "mocha-phantomjs": "~2.0.2"
   },
-  "devDependencies": {
+  "peerDependencies": {
     "bem": "~0.6.6"
   },
   "keywords": [

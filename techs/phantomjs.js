@@ -1,6 +1,6 @@
 var BEM = require('bem'),
     Q = BEM.require('qq'),
-    LOGGER = BEM.require('./logger'),
+    LOGGER = BEM.logger,
     CP = require('child_process'),
     PATH = require('path'),
     mochaPhantomjsPath = PATH.resolve(require.resolve('mocha-phantomjs'), '../../bin/mocha-phantomjs');
