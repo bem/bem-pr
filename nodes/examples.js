@@ -3,10 +3,6 @@ var PATH = require('path'),
     Q = BEM.require('q'),
     QFS = BEM.require('q-fs'),
     LOGGER = BEM.logger,
-
-    /* exports */
-    ExampleNodeName = exports.ExampleNodeName = 'ExampleNode',
-    ExampleSourceNodeName = exports.ExampleSourceNodeName = 'ExampleSourceNode',
     U = BEM.util,
     createLevel = BEM.createLevel;
 
@@ -53,12 +49,12 @@ module.exports = function(registry) {
             return ['bemjson.js'];
         },
 
-        bundleNodeCls : ExampleNodeName
+        bundleNodeCls : 'ExampleNode'
 
     });
 
 
-    registry.decl(ExampleNodeName, 'BundleNode', {
+    registry.decl('ExampleNode', 'BundleNode', {
 
         __constructor : function(o) {
             this.__base(o);
@@ -115,7 +111,7 @@ module.exports = function(registry) {
 
         createSourceNode : function() {
             var node = this.useFileOrBuild(
-                registry.getNodeClass(ExampleSourceNodeName)
+                registry.getNodeClass('ExampleSourceNode')
                     .create({
                         root   : this.root,
                         level  : this.level,
@@ -129,7 +125,7 @@ module.exports = function(registry) {
         },
 
         createUpstreamNode : function() {
-            var filePath = registry.getNodeClass(ExampleSourceNodeName)
+            var filePath = registry.getNodeClass('ExampleSourceNode')
                 .createPath({
                     root  : this.root,
                     level : this.source.level,
@@ -150,7 +146,7 @@ module.exports = function(registry) {
     });
 
 
-    registry.decl(ExampleSourceNodeName, 'GeneratedFileNode', {
+    registry.decl('ExampleSourceNode', 'GeneratedFileNode', {
 
         __constructor : function(o) {
             var self = this.__self;
