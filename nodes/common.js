@@ -221,8 +221,8 @@ module.exports = function(registry) {
 
         createPath : function(o) {
             var level = typeof o.level === 'string'?
-                createLevel(PATH.resolve(o.root, o.level), { noCache: true }) :
-                o.level;
+                    createLevel(PATH.resolve(o.root, o.level), { noCache: true }) :
+                    o.level;
 
             return level
                 .getTech(o.item.tech)

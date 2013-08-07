@@ -57,24 +57,25 @@ module.exports = function(registry) {
 
         createSetsLevelNodes : function(parents, children) {
             var sets = this.getSets();
-            return Object.keys(sets).map(function(name) {
+            return Object.keys(sets)
+                .map(function(name) {
 
-                var node = registry.getNodeClass('SetsLevelNode')
-                    .create({
-                        root    : this.root,
-                        level   : this.rootLevel,
-                        item    : { block : name, tech : 'sets' },
-                        sources : sets[name]
-                    });
+                    var node = registry.getNodeClass('SetsLevelNode')
+                        .create({
+                            root    : this.root,
+                            level   : this.rootLevel,
+                            item    : { block : name, tech : 'sets' },
+                            sources : sets[name]
+                        });
 
-                this.arch.setNode(node);
+                    this.arch.setNode(node);
 
-                parents && this.arch.addParents(node, parents);
-                children && this.arch.addChildren(node, children);
+                    parents && this.arch.addParents(node, parents);
+                    children && this.arch.addChildren(node, children);
 
-                return node.getId();
+                    return node.getId();
 
-            }, this);
+                }, this);
         },
 
         /**
