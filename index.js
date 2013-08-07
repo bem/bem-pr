@@ -1,3 +1,5 @@
+'use strict';
+
 var PATH = require('path');
 
 exports.extendMake = function(registry) {
@@ -7,3 +9,5 @@ exports.extendMake = function(registry) {
 exports.getTestLevelPath = function() {
     return PATH.join(__dirname, 'test.blocks');
 };
+
+exports.require = require;
