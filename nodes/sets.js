@@ -2,6 +2,8 @@
  * @fileOverview Узлы для сборки наборов БЭМ-сущностей (sets)
  */
 
+'use strict';
+
 var FS = require('fs'),
     PATH = require('path'),
     BEM = require('bem'),

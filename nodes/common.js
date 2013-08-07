@@ -1,5 +1,7 @@
 /* jshint curly:false */
 
+'use strict';
+
 var FS = require('fs'),
     PATH = require('path'),
     BEM = require('bem'),
