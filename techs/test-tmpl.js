@@ -1,5 +1,5 @@
-var PATH = require('path'),
-    tmpl = require('bem/lib/template');
+var BEM = require('bem'),
+    PATH = require('path');
 
 exports.techMixin = {
 
@@ -7,7 +7,7 @@ exports.techMixin = {
 
         var envProps = JSON.parse(process.env.__tests || '{}')[PATH.dirname(path)] || {};
 
-        return tmpl.process([
+        return BEM.template.process([
             '({',
             '    block: "page",',
             '    head: [',
