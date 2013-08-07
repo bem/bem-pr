@@ -10,7 +10,9 @@ module.exports = function(registry) {
     registry.decl('TestsLevelNode', 'GeneratedLevelNode', {
 
         __constructor : function(o) {
-            this.__base(U.extend({}, o, { item : this.getTestsLevelItem(o.item) }));
+            this.__base(U.extend({}, o, {
+                item : this.getTestsLevelItem(o.item)
+            }));
         },
 
         getTestsLevelItem : function(item) {
@@ -132,7 +134,8 @@ module.exports = function(registry) {
         },
 
         getLevels: function(tech) {
-            return this.__base(tech).concat([PATH.join(__dirname, '../test.blocks')]);
+            return this.__base(tech)
+                .concat([PATH.join(__dirname, '../test.blocks')]);
         },
 
         getTechs : function() {
