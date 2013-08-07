@@ -1,3 +1,5 @@
+'use strict';
+
 var BEM = require('bem'),
     Q = BEM.require('qq'),
     LOGGER = BEM.logger,

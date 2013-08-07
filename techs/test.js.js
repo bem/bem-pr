@@ -1,3 +1,5 @@
+'use strict';
+
 var BEM = require('bem'),
     QFS = BEM.require('bem'),
     DEPS = require('bem/lib/techs/deps.js'),
