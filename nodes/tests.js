@@ -144,6 +144,14 @@ module.exports = function(registry) {
                 'test.js',
                 'phantomjs'
             ]);
+        },
+
+        'create-phantomjs-node': function(tech, bundleNode, magicNode) {
+            return this.setBemCreateNode(
+                tech,
+                this.level.resolveTech(tech),
+                bundleNode,
+                magicNode);
         }
 
     });
