@@ -138,14 +138,6 @@ module.exports = function(registry) {
                 .concat([PATH.join(__dirname, '../test.blocks')]);
         },
 
-        getTechs : function() {
-            return this.__base().concat([
-                'browser.js',
-                'test.js',
-                'phantomjs'
-            ]);
-        },
-
         'create-phantomjs-node': function(tech, bundleNode, magicNode) {
             return this.setBemCreateNode(
                 tech,
