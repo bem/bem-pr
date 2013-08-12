@@ -7,7 +7,8 @@ exports.extendMake = function(registry) {
 };
 
 exports.getTestLevelPath = function() {
-    return PATH.join(__dirname, 'test.blocks');
+    return exports.resolve('test.blocks');
 };
 
 exports.require = require;
+exports.resolve = PATH.resolve.bind(PATH, __dirname);
