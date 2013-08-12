@@ -1,7 +1,7 @@
 'use strict';
 
 var BEM = require('bem'),
-    Q = BEM.require('qq'),
+    Q = BEM.require('q'),
     LOGGER = BEM.logger,
     CP = require('child_process'),
     PATH = require('path'),
@@ -12,6 +12,7 @@ exports.API_VER = 2;
 exports.techMixin = {
 
     getDependencies: function() {
+        // FIXME: wrong deps in case of test.js+browser.js+bemhtml tech
         return ['html', 'test.js'];
     },
 
