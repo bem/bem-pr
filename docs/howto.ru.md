@@ -254,4 +254,4 @@ exports.getTechs = function() {
 
 в браузере открываем (http://localhost:8080/desktop.sets/block.examples/10example/10example.html).
 
-Пример использования можно посмотреть в репозитории (http://github.com/narqo/bl-controls), ветка `feature/bem-pr`.
+Пример использования можно посмотреть в репозитории (http://github.com/bem/bem-core).
