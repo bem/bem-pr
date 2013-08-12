@@ -97,6 +97,7 @@ module.exports = function(registry) {
         __constructor: function(o) {
             var testsEnv = JSON.parse(process.env.__tests || '{}'),
                 testId = PATH.join(o.root, o.level, o.item.block),
+                // FIXME: use level getter
                 pageRelPath = PATH.join(o.level, o.item.block, o.item.block + '.html'),
                 consoleReporter = this.consoleReporter || '',
                 pageURL;
