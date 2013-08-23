@@ -10,7 +10,7 @@ exports.API_VER = 2;
 exports.techMixin = {
 
     /**
-     * Если в testbundle.bemjson.js есть декларация блока test, и в поле content этого блока
+     * Если в testbundle.bemjson.js есть декларация блока "test", и в поле "decl" этого блока
      * перечислены конкретные bem-сущности, то строим декларацию таким образом,
      * чтобы в файл testbundle.test.js попали только тесты этих bem-сущностей.
      */
@@ -29,7 +29,7 @@ exports.techMixin = {
 
             JSON.stringify(require('vm').runInThisContext(bemjson), function(key, val) {
                 if(key === 'block' && val === 'test') {
-                    tests = tests.concat(this.content || []);
+                    tests = tests.concat(this.decl || []);
                 }
                 return val;
             });
