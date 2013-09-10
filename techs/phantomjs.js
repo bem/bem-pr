@@ -1,7 +1,7 @@
 'use strict';
 
 var BEM = require('bem'),
-    Q = BEM.require('qq'),
+    Q = BEM.require('q'),
     LOGGER = BEM.logger,
     CP = require('child_process'),
     PATH = require('path'),
@@ -9,37 +9,40 @@ var BEM = require('bem'),
 
 exports.API_VER = 2;
 
-exports.getDependencies = function() {
-    return ['html', 'test.js'];
-};
+exports.techMixin = {
 
-exports.storeBuildResult = function(path, suffix, res) {
+    getDependencies: function() {
+        return ['html', 'test.js+browser.js+bemhtml'];
+    },
 
-    var envProps = JSON.parse(process.env.__tests || '{}')[PATH.dirname(path)] || {},
-        consoleReporter = envProps.consoleReporter ? '--reporter ' + envProps.consoleReporter : '',
-        URL = envProps.pageURL || (PATH.join(PATH.dirname(path), PATH.basename(path, '.phantomjs')) + '.html'),
-        defer = Q.defer();
+    storeCreateResult: function(path, suffix, res, force) {
 
-    CP.exec([mochaPhantomjsPath, consoleReporter, URL].join(' '), function (error, stdout, stderr) {
+        var envProps = JSON.parse(process.env.__tests || '{}')[PATH.dirname(path)] || {},
+            consoleReporter = envProps.consoleReporter ? '--reporter ' + envProps.consoleReporter : '',
+            URL = envProps.pageURL || (PATH.join(PATH.dirname(path), PATH.basename(path, '.phantomjs')) + '.html'),
+            defer = Q.defer();
 
-        console.log([
-            '------------------------------',
-            'Tests results for: ' + PATH.dirname(path),
-            stdout && 'stdout: ' + stdout,
-            stderr && 'stderr: ' + stderr,
-            error  && 'error: ' + error,
-            '------------------------------',
-        ].filter(Boolean).join('\n'));
+        CP.exec([mochaPhantomjsPath, consoleReporter, URL].join(' '), function (error, stdout, stderr) {
 
-        if(error !== null) {
-            defer.reject('Tests failed');
-        }
-        else {
-            defer.resolve();
-        }
-    });
+            console.log([
+                '------------------------------',
+                'Tests results for: ' + PATH.dirname(path),
+                stdout && 'stdout: ' + stdout,
+                stderr && 'stderr: ' + stderr,
+                error  && 'error: ' + error,
+                '------------------------------'
+            ].filter(Boolean).join('\n'));
 
-    LOGGER.info('[i] Page was sent to Phantom (' + URL + ')');
+            if (error !== null) {
+                defer.reject('Tests failed');
+            } else {
+                defer.resolve();
+            }
+        });
 
-    return defer.promise;
+        LOGGER.info('[i] Page was sent to Phantom (' + URL + ')');
+
+        return defer.promise;
+    }
+
 };

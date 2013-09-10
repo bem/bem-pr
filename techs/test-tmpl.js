@@ -5,11 +5,12 @@ var BEM = require('bem'),
 
 exports.techMixin = {
 
-    getCreateResult : function(path, suffix, vars) {
+    getEnvProps: function(path) {
+        return JSON.parse(process.env.__tests || '{}')[PATH.dirname(path)] || {};
+    },
 
-        var envProps = JSON.parse(process.env.__tests || '{}')[PATH.dirname(path)] || {};
-
-        return BEM.template.process([
+    getTemplate: function() {
+        return [
             '({',
             '    block: "page",',
             '    head: [',
@@ -21,10 +22,20 @@ exports.techMixin = {
             '        content: {{bemTmplContent}}',
             '    }',
             '})'
-        ], {
-            BundleName: envProps.BundleName || vars.BlockName,
-            TmplContent: envProps.TmplContent || ''
-        });
+        ];
+    },
+
+    getTemplateData: function(env, vars, suffix) {
+        return {
+            BundleName: env.BundleName || vars.BlockName,
+            TmplContent: env.TmplContent || ''
+        };
+    },
+
+    getCreateResult : function(path, suffix, vars) {
+        return BEM.template.process(
+            this.getTemplate(),
+            this.getTemplateData(this.getEnvProps(path), vars, suffix));
     },
 
     getCreateSuffixes : function() {

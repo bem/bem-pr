@@ -97,6 +97,7 @@ module.exports = function(registry) {
         __constructor: function(o) {
             var testsEnv = JSON.parse(process.env.__tests || '{}'),
                 testId = PATH.join(o.root, o.level, o.item.block),
+                // FIXME: use level getter
                 pageRelPath = PATH.join(o.level, o.item.block, o.item.block + '.html'),
                 consoleReporter = this.consoleReporter || '',
                 pageURL;
@@ -138,12 +139,20 @@ module.exports = function(registry) {
                 .concat([PATH.join(__dirname, '../test.blocks')]);
         },
 
-        getTechs : function() {
-            return this.__base().concat([
-                'browser.js',
-                'test.js',
-                'phantomjs'
-            ]);
+        'create-phantomjs-node': function(tech, bundleNode, magicNode) {
+            return this.setBemCreateNode(
+                tech,
+                this.level.resolveTech(tech),
+                bundleNode,
+                magicNode);
+        },
+
+        'create-test.js-optimizer-node': function(tech, sourceNode, bundleNode) {
+            return this['create-js-optimizer-node'].apply(this, arguments);
+        },
+
+        'create-test.js+browser.js+bemhtml-optimizer-node': function(tech, sourceNode, bundleNode) {
+            return this['create-js-optimizer-node'].apply(this, arguments);
         }
 
     });
