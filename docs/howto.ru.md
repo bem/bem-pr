@@ -94,7 +94,8 @@ var bemPr = require('bem-pr');
 ```js
 // PRJ/.bem/make.js
 
-var bemPr = require('bem-pr');
+var PATH = require('path'),
+    bemPr = require('bem-pr');
 
 (function(registry) {
 
@@ -150,7 +151,6 @@ var bemPr = require('bem-pr');
          */
         getLevels : function() {
 
-            var resolve = require('path').resolve.bind(null, this.root);
             return [
                 'bem-bl/blocks-common',
                 'bem-bl/blocks-desktop',
@@ -164,7 +164,9 @@ var bemPr = require('bem-pr');
                     .getTech('blocks')
                     .getPath(this.getSourceNodePrefix())
             ])
-            .map(resolve);
+            .map(function(p) {
+                return PATH.resolve(this.root, p);
+            });
 
         }
 
