@@ -212,7 +212,8 @@ exports.techMixin = {
 - Расширяем класс `TestNode`
 
 В файле `.bem/levels/tests.js`:
-- Указываем пути до технологий `test.js+browser.js+bemhtml`, `test-tmpl`, `phantomjs`, `browser.js` и `bemhtml`.
+- Указываем пути до технологий `test.js+browser.js+bemhtml`, `test.js`, `test-tmpl`, `phantomjs`, `browser.js`,
+  `vanilla.js` и `bemhtml`.
 
 #### Расширяем класс `TestNode`
 
