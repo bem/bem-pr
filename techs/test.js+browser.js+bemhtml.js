@@ -5,21 +5,6 @@ var PATH = require('path'),
     BEM = require('bem'),
     Q = BEM.require('q');
 
-function getTechBuildResults(techName, decl, context, output, opts) {
-    opts.force = true;
-    var tech = context.createTech(techName);
-
-    if (tech.API_VER !== 2) return Q.reject(new Error(this.getTechName() +
-        ' can’t use v1 ' + tech + ' tech to concat ' + tech + ' content. Configure level to use v2 ' + tech + '.'));
-
-    return tech.getBuildResults(
-        decl,
-        context.getLevels(),
-        output,
-        opts
-    );
-}
-
 exports.API_VER = 2;
 
 exports.techMixin = {
@@ -32,12 +17,13 @@ exports.techMixin = {
 
     getBuildResult: function(files, suffix, output, opts) {
         var context = this.context,
-            ctxOpts = context.opts;
+            ctxOpts = context.opts,
+            _this = this;
 
         return ctxOpts.declaration
             .then(function(decl) {
-                var testJsResults = getTechBuildResults('test.js', decl, context, output, opts),
-                    browserJsResults = getTechBuildResults('browser.js', decl, context, output, opts),
+                var testJsResults = _this.getTechBuildResults('test.js', decl, context, output, opts),
+                    browserJsResults = _this.getTechBuildResults('browser.js', decl, context, output, opts),
                     bemhtmlDecl = new DEPS.Deps(),
                     depsByTechs = decl.depsByTechs || {},
                     depsByTechsJs = depsByTechs.js || {},
@@ -49,7 +35,7 @@ exports.techMixin = {
                 bemhtmlDecl = { deps: (bemhtmlDecl.serialize()['bemhtml'] || {})['bemhtml'] || [] };
 
                 var bemhtmlResults = bemhtmlDecl.deps.length ?
-                    getTechBuildResults('bemhtml', bemhtmlDecl, context, output, opts) :
+                    _this.getTechBuildResults('bemhtml', bemhtmlDecl, context, output, opts) :
                     '';
 
                 return Q.all([testJsResults, browserJsResults, bemhtmlResults])
@@ -62,6 +48,24 @@ exports.techMixin = {
                     });
 
             });
+    },
+
+    getTechBuildResults: function(techName, decl, context, output, opts) {
+        opts.force = true;
+        var tech = context.createTech(techName);
+
+        if (tech.API_VER < 2) {
+            return Q.reject(new Error(this.getTechName() +
+                ' can’t use v1 ' + techName + ' tech to concat ' + techName + ' content. ' +
+                'Configure level to use v2 ' + techName + '.'));
+        }
+
+        return tech.getBuildResults(
+            tech.transformBuildDecl(decl),
+            context.getLevels(),
+            output,
+            opts
+        );
     }
 
 };

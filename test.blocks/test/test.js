@@ -1,3 +1,8 @@
+// declare empty "test" module to make sure it is exist even if there are no any tests declared
+modules.define("test", function(provide) {
+    provide();
+});
+
 modules.require(['mocha', 'chai', 'sinon', 'sinon-chai'], function(mocha, chai, sinon, sinonChai) {
 
     mocha.ui('bdd');
