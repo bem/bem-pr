@@ -1,5 +1,5 @@
 var PATH = require('path'),
-    BEMPR_TECHS = PATH.resolve(__dirname, '../../../bem/techs'),
+    BEM_SETS_TECHS = PATH.resolve(__dirname, '../../../bem/techs'),
     join = PATH.join;
 
 exports.getTechs = function() {
@@ -20,7 +20,7 @@ exports.getTechs = function() {
     };
 
     ['sets', 'examples', 'tests', 'test-tmpl', 'phantomjs', 'test.js'].forEach(function(name) {
-        techs[name] = join(BEMPR_TECHS, name + '.js');
+        techs[name] = join(BEM_SETS_TECHS, name + '.js');
     });
 
     return techs;
