@@ -146,7 +146,7 @@ modules.define('test', function(provide) {
 
 ### Оформление блока `test`
 
-`test` это специальный блок, который поставляется с библиотекой `bem-pr`. Он умеет запускать тесты.
+`test` это специальный блок, который поставляется с библиотекой `bem-sets`. Он умеет запускать тесты.
 Делает две простые вещи:
 - Дает возможность прогнать тесты конкретных блоков;
 - Подтягивает за собой тестовый фреймворк (mocha), библиотеку ассертов (chai) и пр.
@@ -179,7 +179,7 @@ modules.define('test', function(provide) {
 `getTemplate()` верните подходящий шаблон.
 
 ```js
-exports.baseTechPath = require.resolve('bem-pr/techs/test-tmpl.js');
+exports.baseTechPath = require.resolve('bem-sets/techs/test-tmpl.js');
 
 exports.techMixin = {
 
@@ -218,7 +218,7 @@ exports.techMixin = {
 #### Расширяем класс `TestNode`
 
 Сначала нужно настроить сборку примеров (и убедиться, что она работает):
-https://github.com/bem/bem-pr/blob/master/docs/howto.ru.md
+https://github.com/bem/bem-sets/blob/master/docs/howto.ru.md
 
 За сборку тестовых бандлов отвечает класс `TestNode` (он расширяет класс `ExampleNode`).
 
@@ -267,7 +267,7 @@ MAKE.decl('TestNode', {
 `test-tmpl`, `phantomjs`, `browser.js`, `vanilla.js` и `bemhtml`, которые потребуются при сборке тестов.
 
 ```js
-var bemPr = require('bem-pr'),
+var bemSets = require('bem-sets'),
     PATH = require('path'),
     PRJ_TECHS = PATH.resolve(__dirname, '../techs'),
     PRJ_ROOT = PATH.resolve(__dirname, '../..');
@@ -277,10 +277,10 @@ exports.getTechs = function() {
     return {
 
         // Технологии для сборки и запуска тестов
-        'test.js+browser.js+bemhtml' : bemPr.resolve('./techs/test.js+browser.js+bemhtml.js'),
-        'test.js'                    : bemPr.resolve('./techs/test.js.js'),
-        'test-tmpl'                  : bemPr.resolve('./techs/test-tmpl.js'),
-        'phantomjs'                  : bemPr.resolve('./techs/phantomjs.js'),
+        'test.js+browser.js+bemhtml' : bemSets.resolve('./techs/test.js+browser.js+bemhtml.js'),
+        'test.js'                    : bemSets.resolve('./techs/test.js.js'),
+        'test-tmpl'                  : bemSets.resolve('./techs/test-tmpl.js'),
+        'phantomjs'                  : bemSets.resolve('./techs/phantomjs.js'),
 
         'bemhtml'                    : PATH.join(PRJ_ROOT, 'bem-core/.bem/techs/bemhtml.js'),
         'browser.js'                 : PATH.join(PRJ_ROOT, 'bem-core/.bem/techs/browser.js.js'),

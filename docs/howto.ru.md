@@ -8,33 +8,33 @@
 
 Для того чтобы собирать примеры блоков в своей библиотеки, достаточно выполнить «несколько условий».
 
-### 1. Подключаем `bem-pr`
+### 1. Подключаем `bem-sets`
 
-    › npm install --save-dev bem-pr
+    › npm install --save-dev bem-sets
 
 ### 2. Создаём прототипы уровней
 
-    › bem create level --level bem-pr/levels/sets.js .bem/levels/sets.js
+    › bem create level --level bem-sets/levels/sets.js .bem/levels/sets.js
 
 ### 3. Добавляем цель `sets` в процесс сборки
 
-`bem-pr` расширяет стандартный класс `Arch`, добавляя в процесс сборки узлы отвечающие за сборку наборов (sets).
+`bem-sets` расширяет стандартный класс `Arch`, добавляя в процесс сборки узлы отвечающие за сборку наборов (sets).
 
 Для добавления в процесс сборки собственных узлов, в новых версиях bem-tools, в класс `Arch` добавлен метод
 `createCustomNodes`.
 
-В `make.js` необходимо определить этот метод, добавив в процесс сборки, узлы из `bem-pr`.
+В `make.js` необходимо определить этот метод, добавив в процесс сборки, узлы из `bem-sets`.
 
 ```js
 
 // PRJ/.bem/make.js
 
-var bemPr = require('bem-pr');
+var bemSets = require('bem-sets');
 
 (function(registry) {
 
     // Добавляем новые узлы в реестр
-    bemPr.extendMake(registry);
+    bemSets.extendMake(registry);
 
     registry.decl('Arch', {
 
@@ -48,7 +48,7 @@ var bemPr = require('bem-pr');
                     root : this.root,
                     arch : this.arch
                 })
-                // расширяем процесс сборки новыми узлами из bem-pr
+                // расширяем процесс сборки новыми узлами из bem-sets
                 .alterArch();
 
         }
@@ -95,12 +95,12 @@ var bemPr = require('bem-pr');
 // PRJ/.bem/make.js
 
 var PATH = require('path'),
-    bemPr = require('bem-pr');
+    bemSets = require('bem-sets');
 
 (function(registry) {
 
     // Добавляем новые узлы в реестр
-    bemPr.extendMake(registry);
+    bemSets.extendMake(registry);
 
     registry.decl('Arch', {
 
@@ -112,7 +112,7 @@ var PATH = require('path'),
                     root : this.root,
                     arch : this.arch
                 })
-                // расширяем процесс сборки новыми узлами из bem-pr
+                // расширяем процесс сборки новыми узлами из bem-sets
                 .alterArch();
 
         }
