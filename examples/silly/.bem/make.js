@@ -4,10 +4,7 @@
 var bemSets = require('../../../');
 
 bemSets.extendMake(MAKE);
-
-
-// import some globals
-require('../../.bem/nodes');
+require('../../.bem/nodes').extendMake(MAKE);
 
 MAKE.decl('Arch', {
 

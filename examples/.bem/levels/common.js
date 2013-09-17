@@ -5,19 +5,19 @@ var PATH = require('path'),
 
 exports.getTechs = function() {
     var techs = {
-        'blocks' : '',
-        'bundles' : '',
-        'bemjson.js' : '',
+        'blocks' : 'bem/lib/tech/v2',
+        'bundles' : 'bem/lib/tech/v2',
+        'bemjson.js' : 'bem/lib/tech/v2',
 
-        'bemdecl.js' : 'bemdecl.js',
-        'deps.js' : 'deps.js',
-        'js' : 'js-i',
-        'css' : 'css',
-        'ie.css' : 'ie.css',
-        'ie6.css' : 'ie6.css',
-        'ie7.css' : 'ie7.css',
-        'ie8.css' : 'ie8.css',
-        'ie9.css' : 'ie9.css',
+        'bemdecl.js' : 'v2/bemdecl.js',
+        'deps.js' : 'v2/deps.js',
+        'js' : 'v2/js-i',
+        'css' : 'v2/css',
+        'ie.css' : 'v2/ie.css',
+        'ie6.css' : 'v2/ie6.css',
+        'ie7.css' : 'v2/ie7.css',
+        'ie8.css' : 'v2/ie8.css',
+        'ie9.css' : 'v2/ie9.css',
         'tests': 'level-proto',
         'examples': 'level-proto'
     };

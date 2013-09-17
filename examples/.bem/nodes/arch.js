@@ -1,8 +1,11 @@
-var registry = require('bem/lib/nodesregistry');
+'use strict';
 
-registry.decl('Arch', {
+exports.extendMake = function (registry) {
+    registry.decl('Arch', {
 
-    blocksLevelsRegexp : /^.+?\.blocks$/,
-    bundlesLevelsRegexp : /^.+?\.bundles$/
+        blocksLevelsRegexp : /^.+?\.blocks$/,
+        bundlesLevelsRegexp : /^.+?\.bundles$/
 
-});
+    });
+};
+

@@ -1,14 +1,16 @@
-var registry = require('bem/lib/nodesregistry');
+'use strict';
 
-registry.decl('TestNode', {
+exports.extendMake = function (registry) {
+    registry.decl('TestNode', {
 
-    getTechs : function() {
-        return [
-            'bemjson.js',
-            'bemdecl.js',
-            'deps.js',
-            'test.js'
-        ];
-    }
+        getTechs : function() {
+            return [
+                'bemjson.js',
+                'bemdecl.js',
+                'deps.js',
+                'test.js'
+            ];
+        }
 
-});
+    });
+};

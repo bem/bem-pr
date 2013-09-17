@@ -1,23 +1,26 @@
-var PATH = require('path'),
-    registry = require('bem/lib/nodesregistry');
+'use strict';
 
-registry.decl('BundleNode', {
+var PATH = require('path');
 
-    getTechs : function() {
-        return [
-            'bemjson.js',
-            'bemdecl.js',
-            'deps.js',
-            'css',
-            'js'
-        ];
-    },
+exports.extendMake = function (registry) {
+    registry.decl('BundleNode', {
 
-    getLevels : function() {
-        var resolve = PATH.resolve.bind(PATH, this.root);
-        return ['common.blocks', 'desktop.blocks'].map(function(lvl) {
-            return resolve(lvl);
-        });
-    }
+        getTechs : function() {
+            return [
+                'bemjson.js',
+                'bemdecl.js',
+                'deps.js',
+                'css',
+                'js'
+            ];
+        },
 
-});
+        getLevels : function() {
+            var resolve = PATH.resolve.bind(PATH, this.root);
+            return ['common.blocks', 'desktop.blocks'].map(function(lvl) {
+                return resolve(lvl);
+            });
+        }
+
+    });
+};
