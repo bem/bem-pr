@@ -1,5 +1,6 @@
+'use strict';
 var PATH = require('path'),
-    BEM_SETS_TECHS = PATH.resolve(__dirname, '../../../bem/techs'),
+    BEM_SETS_TECHS = PATH.resolve(__dirname, '../../../techs'),
     join = PATH.join;
 
 exports.getTechs = function() {
@@ -16,10 +17,12 @@ exports.getTechs = function() {
         'ie6.css' : 'ie6.css',
         'ie7.css' : 'ie7.css',
         'ie8.css' : 'ie8.css',
-        'ie9.css' : 'ie9.css'
+        'ie9.css' : 'ie9.css',
+        'tests': 'level-proto',
+        'examples': 'level-proto'
     };
 
-    ['sets', 'examples', 'tests', 'test-tmpl', 'phantomjs', 'test.js'].forEach(function(name) {
+    ['test-tmpl', 'phantomjs', 'test.js'].forEach(function(name) {
         techs[name] = join(BEM_SETS_TECHS, name + '.js');
     });
 
