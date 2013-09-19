@@ -124,7 +124,7 @@ module.exports = function(registry) {
                         o = {
                             root  : this.root,
                             level : this.path,
-                            item  : item
+                            item  : this.getSetItem(item)
                         };
 
                         var LevelNodeCls = registry.getNodeClass(getNodeClassForSuffix(item.suffix)),
@@ -175,6 +175,20 @@ module.exports = function(registry) {
                 '.test.js'  : 'TestsLevelNode'
             };
             return suffix2class[suffix];
+        },
+
+        getSetItem: function(item) {
+            return BEM.util.extend({}, item, {tech: this.getSetTech(item.tech)});
+        },
+
+        getSetTech: function(sourceTech) {
+            var sourceToSet = {
+                'examples': 'examples-set',
+                'tests': 'tests-set',
+                'test.js': 'tests-set'
+            };
+
+            return sourceToSet[sourceTech];
         }
 
     });

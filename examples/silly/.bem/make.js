@@ -1,57 +1,80 @@
-/*global MAKE */
 'use strict';
 
-var bemSets = require('../../../');
+function extendMake(registry) {
+    require('../../../').extendMake(registry);
 
-bemSets.extendMake(MAKE);
-require('../../.bem/nodes').extendMake(MAKE);
+    registry.decl('Arch', {
 
-MAKE.decl('Arch', {
+        blocksLevelsRegexp: /^.+?\.blocks/,
 
-    createCustomNodes : function() {
-        return MAKE.getNodeClass('SetsNode')
-            .create({
-                root : this.root,
-                arch : this.arch
-            })
-            .alterArch();
-    }
+        bundlesLevelsRegexp: /^.+?\.bundles$/,
 
-});
+        createCustomNodes: function(common, libs, blocks) {
+            return registry.getNodeClass('SetsNode')
+                .create({
+                    root: this.root,
+                    arch: this.arch
+                })
+                .alterArch();
+        }
+    });
 
-MAKE.decl('SetsNode', {
+    registry.decl('BundleNode', {
+        getTechs: function() {
+            return [
+                'bemjson.js',
+                'bemdecl.js',
+                'deps.js',
+                'css',
+                'js'
+            ];
+        }
+    });
 
-    getSets : function() {
-        return {
-            'desktop' : ['common.blocks', 'desktop.blocks'],
-            'touch' : ['common.blocks', 'touch.blocks']
-        };
-    }
+    registry.decl('SetsNode', {
+        getSets: function() {
+            return {
+                'desktop': ['common.blocks', 'desktop.blocks'],
+                'touch': ['common.blocks', 'touch.blocks']
+            };
+        }
+    });
 
-});
+    registry.decl('ExampleNode', {
+        getTechs: function() {
+            return [
+                'bemjson.js',
+                'bemdecl.js',
+                'deps.js',
+                'css',
+                'js'
+            ];
+        }
+    });
 
-MAKE.decl('SetsLevelNode', {
+    registry.decl('TestNode', {
+        getTechs: function() {
+            return [
+                'bemjson.js',
+                'bemdecl.js',
+                'deps.js',
+                'test.js'
+            ];
+        }
+    });
 
-    getSourceItemTechs : function() {
-        return [ 'test.js', 'examples' ];
-    }
+    registry.decl('SetsLevelNode', {
+        getSourceItemTechs: function() {
+            return ['examples', 'test.js'];
+        }
+    });
 
-});
+}
 
-// TODO: configure examples building process
-//MAKE.decl('ExampleNode', {
-//
-//    getLevels : function() {
-//        return [];
-//    }
-//
-//});
+if (typeof MAKE === 'undefined') {
+    module.exports = extendMake;
+} else {
+    /*global MAKE*/
+    extendMake(MAKE);
+}
 
-// TODO: configure tests building process
-//MAKE.decl('TestNode', {
-//
-//    getLevels : function() {
-//        return [];
-//    }
-//
-//});

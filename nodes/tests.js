@@ -36,7 +36,7 @@ module.exports = function(registry) {
         },
 
         getTestsLevelTechName : function() {
-            return 'tests';
+            return 'tests-set';
         },
 
         getTestContent : function(item) {

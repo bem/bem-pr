@@ -2,7 +2,7 @@
 var BEM = require('bem'),
     bemSets = require('../../../../');
 
-exports.baseLevelPath = require.resolve('./examples.js');
+exports.baseLevelPath = require.resolve('./examples-set.js');
 
 exports.getTechs = function() {
 
@@ -12,4 +12,3 @@ exports.getTechs = function() {
         'test.js'    : bemSets.resolveTech('test.js')
     });
 };
-
