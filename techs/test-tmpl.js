@@ -3,6 +3,8 @@
 var BEM = require('bem'),
     PATH = require('path');
 
+exports.API_VER = 2;
+
 exports.techMixin = {
 
     getEnvProps: function(path) {
@@ -11,24 +13,32 @@ exports.techMixin = {
 
     getTemplate: function() {
         return [
-            '({',
-            '    block: "page",',
-            '    head: [',
-            '        { elem: "css", url: "_{{bemBundleName}}.css", ie: false },',
-            '        { elem: "js", url: "_{{bemBundleName}}.test.js" }',
-            '    ],',
-            '    content: {',
-            '        block: "test",',
-            '        content: {{bemTmplContent}}',
+            '([',
+            '"<!DOCTYPE html>",',
+            '{ "tag": "html", "content": [',
+            '  { "tag": "head", "content": [',
+            '    { "tag": "title", "content": "" },',
+            '    { "tag": "meta", "attrs": { "charset": "utf-8" } },',
+            '    { "tag": "link", "attrs": { "href": "_{{bemBundleName}}.css", "rel": "stylesheet" } },',
+            '    { "tag": "script", "attrs": { "src": "_{{bemBundleName}}.test.js" } }',
+            '  ] },',
+            '  { "tag": "body", "content":',
+            '    {',
+            '      "block": "test",',
+            '      "decl": {{bemTmplDecl}},',
+            '      "content": {{bemTmplContent}}',
             '    }',
-            '})'
+            '  }',
+            '] }',
+            '])'
         ];
     },
 
     getTemplateData: function(env, vars, suffix) {
         return {
-            BundleName: env.BundleName || vars.BlockName,
-            TmplContent: env.TmplContent || ''
+            BundleName : env.BundleName || vars.BlockName,
+            TmplDecl : env.TmplDecl || "",
+            TmplContent : env.TmplContent || ""
         };
     },
 
