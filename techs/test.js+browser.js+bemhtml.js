@@ -1,7 +1,7 @@
 'use strict';
 
 var PATH = require('path'),
-    DEPS = require('bem/lib/techs/deps.js'),
+    DEPS = require('bem/lib/techs/v2/deps.js'),
     BEM = require('bem'),
     Q = BEM.require('q');
 

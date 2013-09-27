@@ -13,6 +13,12 @@ module.exports = function(registry) {
             this.__base(U.extend({}, o, {
                 item : this.getTestsLevelItem(o.item)
             }));
+
+            var item = this.item;
+            this.decl = ['block', 'elem', 'mod', 'val'].reduce(function(decl, name) {
+                item[name] && (decl[name] = item[name]);
+                return decl;
+            }, {});
         },
 
         getTestsLevelItem : function(item) {
@@ -33,7 +39,7 @@ module.exports = function(registry) {
             return 'tests';
         },
 
-        normalizeTestItem : function(item) {
+        getTestContent : function(item) {
             var normalized = {
                     block : item.block
                 },
@@ -53,10 +59,8 @@ module.exports = function(registry) {
         },
 
         alterArch : function() {
-
             var base = this.__base();
             return function() {
-
                 var _t = this,
                     arch = this.ctx.arch;
 
@@ -66,8 +70,8 @@ module.exports = function(registry) {
                             block : this.getAutogenTestBundleName(),
                             tech  : 'bemjson.js'
                         },
-                        source = U.extend({ level : this.path }, _t.item),
-                        testContent = _t.normalizeTestItem(_t.item),
+                        source = U.extend({ level : this.path }, this.item),
+                        testContent = this.getTestContent(this.decl),
                         bundleNode = registry.getNodeClass(this.bundleNodeCls).create({
                             root  : this.root,
                             level : this.path,
@@ -75,6 +79,7 @@ module.exports = function(registry) {
                             source : source,
                             envData: {
                                 BundleName : _t.getAutogenTestBundleName(),
+                                TmplDecl : JSON.stringify(this.decl),
                                 TmplContent : JSON.stringify(testContent)
                             }
                         });
@@ -83,7 +88,6 @@ module.exports = function(registry) {
 
                     return Q.when(_t.takeSnapshot('After TestsLevelNode alterArch ' + _t.getId()));
                 }.bind(this));
-
             };
         },
 
