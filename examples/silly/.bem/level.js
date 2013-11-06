@@ -1,5 +1,10 @@
-exports.baseLevelPath = require.resolve('bem/lib/levels/simple');
+'use strict';
+var BEM = require('bem');
+
+exports.baseLevelPath = require.resolve('bem/lib/levels/project');
 
 exports.getTechs = function() {
-    return require('../../.bem/levels/common.js').getTechs();
+    return BEM.util.extend(this.__base() || {}, {
+        'sets' : 'level-proto'
+    });
 };
