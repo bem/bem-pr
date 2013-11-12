@@ -2,8 +2,8 @@
 
 var PATH = require('path'),
     BEM = require('bem'),
-    Q = BEM.require('q'),
-    QFS = BEM.require('q-fs'),
+    Q = require('q'),
+    QFS = require('q-io/fs'),
     LOGGER = BEM.logger,
     U = BEM.util,
     createLevel = BEM.createLevel;

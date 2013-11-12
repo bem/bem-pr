@@ -1,7 +1,7 @@
 'use strict';
 
 var BEM = require('bem'),
-    Q = BEM.require('q'),
+    Q = require('q'),
     LOGGER = BEM.logger,
     CP = require('child_process'),
     PATH = require('path'),

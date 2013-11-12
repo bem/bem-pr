@@ -8,10 +8,13 @@
   },
   "dependencies": {
     "phantomjs": "~1.9.1",
-    "mocha-phantomjs": "~2.0.2"
+    "mocha-phantomjs": "~2.0.2",
+    "underscore": "~1.5.2",
+    "q": "~0.9.7",
+    "q-io": "~1.10.4"
   },
   "peerDependencies": {
-    "bem": "~0.6.12"
+    "bem": "0.6.x || 0.7.x"
   },
   "devDependencies": {
     "bem": "~0.6.12"
@@ -26,7 +29,6 @@
     "Sergey Belov <peimei@ya.ru> (http://github.com/arikon)",
     "Mikhail Berezin <karamadjong@yandex-team.ru> (http://github.com/mishaberezin)",
     "Sergey Tatarintsev <sevinf@yandex-team.ru> (http://github.com/SevInf)"
-
   ],
   "license": "MIT"
 }
