@@ -2,7 +2,7 @@
 
 var PATH = require('path'),
     BEM = require('bem'),
-    Q = BEM.require('q'),
+    Q = require('q'),
     U = BEM.util;
 
 module.exports = function(registry) {

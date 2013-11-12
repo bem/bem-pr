@@ -3,7 +3,7 @@
 var PATH = require('path'),
     DEPS = require('bem/lib/techs/v2/deps.js'),
     BEM = require('bem'),
-    Q = BEM.require('q');
+    Q = require('q');
 
 exports.API_VER = 2;
 

@@ -7,8 +7,8 @@
 var FS = require('fs'),
     PATH = require('path'),
     BEM = require('bem'),
-    Q = BEM.require('q'),
-    _ = BEM.require('underscore'),
+    Q = require('q'),
+    _ = require('underscore'),
     LOGGER = BEM.logger,
 
     createLevel = BEM.createLevel,
