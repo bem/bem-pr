@@ -17,7 +17,9 @@
     "bem": "0.6.x || 0.7.x"
   },
   "devDependencies": {
-    "bem": "~0.6.12"
+    "bem": "~0.6.12",
+    "marked": "~0.2.5",
+    "shmakowiki": "~0.4.0"
   },
   "keywords": [
     "bem",

@@ -99,50 +99,34 @@ module.exports = function(registry) {
 
                 return Q.when(base.call(this), function(level) {
                     var realLevel = arch.getChildren(level),
-                        getNodeClassForSuffix = _t.getNodeClsForSuffix.bind(_t),
-                        decls = _t.scanSources(),
-                        BlockNodeClass = registry.getNodeClass('BlockNode');
+                        getNodeClassForTech = _t.getNodeClsForTech.bind(_t),
+                        decls = _t.scanSources();
 
+                    decls.unshift({
+                        block: 'catalogue',
+                        tech: '_catalogue',
+                        level: '',
+                        suffix: '_catalogue'
+                    });
+
+                    // BlockNodeClass = registry.getNodeClass('BlockNode');
+console.log('decls: %j', decls)
                     decls.forEach(function(item) {
                         // creating block node (source) for item
                         var o = {
                                 root  : this.root,
                                 item  : item,
                                 level : item.level
-                            },
-                            blockNode,
-                            blocknid = BlockNodeClass.createId(o);
-
-                        if(arch.hasNode(blocknid)) {
-                            blockNode = arch.getNode(blocknid);
-                        } else {
-                            blockNode = BlockNodeClass.create(o);
-                            arch.setNode(blockNode);
-                        }
-
+                            };
+console.log('declitem %s', item.block)
                         // creating levels node for item (examples, tests, whatever)
-                        o = {
-                            root  : this.root,
-                            level : this.path,
-                            item  : this.getSetItem(item)
-                        };
+                        var levelNode = (_t['create-' + item.tech + '-node'] || _t['create-default-level-node']).call(_t, item, level, realLevel),
+                            source = createLevel(item.level).getPathByObj(item, item.suffix.substring(1));
 
-                        var LevelNodeCls = registry.getNodeClass(getNodeClassForSuffix(item.suffix)),
-                            levelnid = LevelNodeCls.createId(o),
-                            levelNode;
-
-                        if(arch.hasNode(levelnid)) {
-                            levelNode = arch.getNode(levelnid);
-                        } else {
-                            levelNode = LevelNodeCls.create(o);
-                            arch.setNode(levelNode, level, realLevel);
-                        }
-
-                        arch.addChildren(levelNode, blockNode);
-
-                        var source = blockNode.level.getPathByObj(item, item.tech);
                         if(FS.existsSync(source)) {
+                            console.log('source  %s', source);
                             levelNode.sources.push(source);
+                            levelNode.sourceItems && levelNode.sourceItems.push(item);
                         }
                     }, _t);
 
@@ -155,26 +139,71 @@ module.exports = function(registry) {
 
         getSourceItemsMap : function() {
             return {
-                examples : ['examples'],
+//                examples : ['examples'],
                 tests : ['tests', 'test.js'],
-                docs : ['md', 'wiki']
+                docs : ['desc.md', 'title.txt']
             };
         },
 
         getSourceItemTechs : function() {
             var map = this.getSourceItemsMap();
-            return _.uniq(Object.keys(map).reduce(function(techs, name) {
+
+            var r = _.uniq(Object.keys(map).reduce(function(techs, name) {
                     return techs.concat(map[name]);
                 }, []));
+
+            return r;
         },
 
-        getNodeClsForSuffix : function(suffix) {
+        getNodeClsForTech : function(suffix) {
             var suffix2class = {
-                '.examples' : 'ExamplesLevelNode',
-                '.tests'    : 'TestsLevelNode',
-                '.test.js'  : 'TestsLevelNode'
+                'examples' : 'ExamplesLevelNode',
+                'test.js'  : 'TestsLevelNode',
+                'desc.md'  : 'DocLevelNode',
+                'title.txt'  : 'DocLevelNode',
+                '_catalogue': 'DocCatalogueNode'
             };
             return suffix2class[suffix];
+        },
+
+        'create-default-level-node': function(item, parents, children) {
+            var arch = this.ctx.arch,
+                o = {
+                    root  : this.root,
+                    level : this.path,
+                    item  : this.getSetItem(item)
+                };
+
+            var LevelNodeCls = registry.getNodeClass(this.getNodeClsForTech(item.tech)),
+                levelnid = LevelNodeCls.createId(o),
+                levelNode;
+
+            console.log('levelid %s', levelnid);
+
+            if(arch.hasNode(levelnid)) {
+                levelNode = arch.getNode(levelnid);
+            } else {
+                levelNode = LevelNodeCls.create(o);
+                arch.setNode(levelNode, parents, children);
+            }
+
+            return levelNode;
+        },
+
+        '1create-examples-node': function(item, parents, children) {
+
+        },
+
+        'create-desc.md-node': function(item, parents, children) {
+            var level = this['create-default-level-node'].apply(this, arguments);
+
+            this.ctx.arch.addChildren(level, 'desktop.sets/catalogue.doc*');
+
+            return level;
+        },
+
+        '1create-_catalogue-node': function(item, parents, children) {
+
         },
 
         getSetItem: function(item) {
@@ -184,7 +213,6 @@ module.exports = function(registry) {
         getSetTech: function(sourceTech) {
             var sourceToSet = {
                 'examples': 'examples-set',
-                'tests': 'tests-set',
                 'test.js': 'tests-set'
             };
 
