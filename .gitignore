@@ -4,3 +4,7 @@
 .bem/snapshots/
 .bem/cache/
 node_modules/
+.idea/
+.*.swp
+*.log
+.DS_Store
