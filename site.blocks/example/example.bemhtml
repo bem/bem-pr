@@ -18,7 +18,7 @@ block example {
     js: true
 
     url: {
-        return this.environ['site-root'] + '/examples/examples.sets/' + this.ctx;
+        return this.ctx;
     }
 
     content: [

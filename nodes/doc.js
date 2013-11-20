@@ -7,6 +7,7 @@ var PATH = require('path'),
     LOGGER = BEM.logger,
     U = BEM.util,
     MD = require('marked').setOptions({ gfm : true, pedantic : false, sanitize : false }),
+    SHMAKOWIKI = require('shmakowiki'),
     createLevel = BEM.createLevel;
 
 
@@ -26,6 +27,7 @@ module.exports = function(registry) {
 
             this.level = createLevel(o.level);
             this.rootLevel = createLevel(this.root);
+            this.levels = o.levels;
             this.sources = [];
             this.sourceItems = [];
         },
@@ -38,14 +40,13 @@ module.exports = function(registry) {
 
         alterArch: function() {
 
-            console.log('node %s sources: %j', this.id, this.sources);
             return function() {
 
                 var _this = this,
                     arch = this.ctx.arch,
                     groupId = this.getId().slice(0, -1),
                     group;
-console.log('groupid %s', groupId);
+
                 if (arch.hasNode(groupId)) {
                     group = arch.getNode(groupId);
                 } else {
@@ -55,9 +56,7 @@ console.log('groupid %s', groupId);
 
                     arch.setNode(group, arch.getParents(this).filter(function(p) {
 
-                        var r = !(arch.getNode(p) instanceof magicNodeCl);
-                        console.log('magiclink %s %s %s', r, groupId, p);
-                        return r;
+                        return !(arch.getNode(p) instanceof magicNodeCl);
                     }), this);
                 }
 
@@ -81,10 +80,10 @@ console.log('groupid %s', groupId);
                                 root: this.root,
                                 level: this.level,
                                 item: this.item}),
+                            levels: this.levels,
                             sources: this.sourceItems
                         });
 
-                console.log('docsource %s doc %s path %s', docSourceNode.getId(), docNode.getId(), groupId);
                 arch.setNode(docSourceNode);
                 arch.setNode(docNode, groupId, docSourceNode.getId());
 
@@ -96,11 +95,7 @@ console.log('groupid %s', groupId);
                     }
                 }).slice(0, -1);
 
-//                var chain = registry.getNodeClass('Node')
-//                    .create(docSourceNode.getId()+'-');
-//                arch.setNode(chain, docSourceNode.getId(), cat);
                 if (groupId !== cat) {
-                    console.log('link: %s %s', docNode.getId(), cat)
                     arch.addChildren(docNode.getId(), 'desktop.sets/catalogue.doc');
                 }
             }
@@ -181,7 +176,7 @@ console.log('groupid %s', groupId);
 
             this.__base(o);
             this.item = o.item;
-            this.level = o.level;
+            this.level = o.level;//typeof o.level === 'string'? createLevel(o.level): o.level;
             this.rootLevel = createLevel(this.root);
         },
 
@@ -220,7 +215,6 @@ console.log('groupid %s', groupId);
                     block: 'catalogue'
                 });
 
-    console.log('resource %s', prefix);
             var bemjson = this.getBemjson(prefix),
                 bemhtml = this.getBemhtml(prefix);
 
@@ -257,13 +251,15 @@ console.log('groupid %s', groupId);
         __constructor : function(o) {
             this.__base(o);
             this.item = o.item;
-            this.level = o.level;
+            this.level = typeof o.level === 'string'? createLevel(o.level): o.level;
             this.path += '.bemjson.js';
             this.rootLevel = createLevel(this.root);
             this.sources = o.sources;
+            this.levels = o.levels;
         },
 
         make: function() {
+
             var getObj = function() {
                     return {
                         toJSON: function() {
@@ -280,39 +276,87 @@ console.log('groupid %s', groupId);
                 },
                 _this = this,
                 json = {},
-                content = this.sources.map(function(item) {
-                    var path = createLevel(item.level).getPathByObj(item, item.suffix.substring(1)),
-                        content = U.readFile(path)
-                            .then(function(c) {
-                                return MD(c);
-                            });
+                content = this.scanExamples()
+                    .then(function() {
+                        return _this.sources.map(function(item) {
+                            var content,
+                                itemLevel = createLevel(item.level);
 
-                    json.name = item.block;
-                    var obj = json;
-                    if (item.elem) {
-                        obj = obj.elems || (obj.elems = getObj());
-                        obj = obj[item.elem] || (obj[item.elem] = {name: item.elem});
-                    }
+                            if (item.tech !== 'examples') {
+                                var path = itemLevel.getPathByObj(item, item.suffix.substring(1));
 
-                    if (item.mod) {
-                        obj = obj.mods || (obj.mods = getObj());
-                        obj = obj[item.mod] || (obj[item.mod] = {name: item.mod});
-                    }
+                                content = U.readFile(path)
+                                    .then(function(c) {
+                                        if (item.tech === 'desc.md') return MD(c);
+                                        if (item.tech === 'desc.wiki') return SHMAKOWIKI.shmakowikiToBemjson(c);
 
-                    if (item.val) {
-                        obj = obj.vals || (obj.vals = getObj());
-                        obj = obj[item.val] || (obj[item.val] = {name: item.val});
-                    }
+                                        return c;
+                                    });
+                            } else {
 
-                    return content.then(function(content) {
-                        var key = item.tech === 'desc.md'? 'description': 'title';
-                        obj[key] = obj[key] || [];
-                        obj[key].push({
-                            level: item.level,
-                            content: content
+
+                                var exampleLevel = createLevel(itemLevel.getPathByObj(item, item.tech)),
+                                    decl = exampleLevel.getItemsByIntrospection();
+
+                                content = Q.all(decl.filter(function(item) {
+                                        return item.tech === 'title.txt'
+                                    })
+                                    .map(function(exampleitem) {
+
+                                        var examplePath = exampleLevel.getPathByObj(exampleitem, exampleitem.suffix.substring(1));
+
+                                        return U.readFile(examplePath)
+                                            .then(function(exampleDesc) {
+                                                var url = PATH.join(
+                                                    _this.rootLevel.getRelPathByObj({ block: item.block, tech: 'examples-set'}, 'examples-set'),
+                                                    _this.level.getRelByObj(exampleitem));
+
+                                                return {
+                                                    url: url,
+                                                    title: exampleDesc
+                                                };
+                                            });
+                                    }));
+                            }
+
+                            json.name = item.block;
+                            var obj = json;
+                            if (item.elem) {
+                                obj = obj.elems || (obj.elems = getObj());
+                                obj = obj[item.elem] || (obj[item.elem] = {name: item.elem});
+                            }
+
+                            if (item.mod) {
+                                obj = obj.mods || (obj.mods = getObj());
+                                obj = obj[item.mod] || (obj[item.mod] = {name: item.mod});
+                            }
+
+                            if (item.val) {
+                                obj = obj.vals || (obj.vals = getObj());
+                                obj = obj[item.val] || (obj[item.val] = {name: item.val});
+                            }
+
+                            return content.then(function(content) {
+                                var key = item.tech;
+                                switch (item.tech) {
+                                    case 'title.txt':
+                                        key = 'title';
+                                        break;
+                                    case 'examples':
+                                        break;
+                                    default:
+                                        key = 'description';
+                                }
+
+                                obj[key] = obj[key] || [];
+                                obj[key].push({
+                                    level: item.level,
+                                    content: content
+                                })
+                            })
+
                         })
-                    })
-                });
+                    });
 
             return Q.all(content)
                 .then(function() {
@@ -321,6 +365,23 @@ console.log('groupid %s', groupId);
                 .then(function() {
                     return U.writeFile(_this.path, JSON.stringify(json, null, 2));
                 });
+        },
+
+        scanExamples: function() {
+
+            return Q.all(this.levels.map(function(l) {
+                var level = createLevel(l);
+
+                level.getItemsByIntrospection()
+                    .filter(function(item) {
+                        return item.tech === 'examples' && item.block === this.item.block;
+                    }, this)
+                    .forEach(function(item) {
+                        item.level = PATH.relative(this.root, level.dir);
+                        this.sources.push(item);
+                    }, this);
+
+            }, this))
         }
     });
 
@@ -328,8 +389,6 @@ console.log('groupid %s', groupId);
 
         __constructor : function(o) {
             this.__base(o);
-
-            console.log('cataloguenode %s', this.id);
         },
 
         getDocNodeClass: function() {
@@ -351,7 +410,6 @@ console.log('groupid %s', groupId);
         },
 
         make: function() {
-            console.log('catpath %s', this.path);
 
             var _this = this;
 

@@ -109,22 +109,12 @@ module.exports = function(registry) {
                         suffix: '_catalogue'
                     });
 
-                    // BlockNodeClass = registry.getNodeClass('BlockNode');
-console.log('decls: %j', decls)
                     decls.forEach(function(item) {
-                        // creating block node (source) for item
-                        var o = {
-                                root  : this.root,
-                                item  : item,
-                                level : item.level
-                            };
-console.log('declitem %s', item.block)
                         // creating levels node for item (examples, tests, whatever)
                         var levelNode = (_t['create-' + item.tech + '-node'] || _t['create-default-level-node']).call(_t, item, level, realLevel),
                             source = createLevel(item.level).getPathByObj(item, item.suffix.substring(1));
 
                         if(FS.existsSync(source)) {
-                            console.log('source  %s', source);
                             levelNode.sources.push(source);
                             levelNode.sourceItems && levelNode.sourceItems.push(item);
                         }
@@ -139,9 +129,9 @@ console.log('declitem %s', item.block)
 
         getSourceItemsMap : function() {
             return {
-//                examples : ['examples'],
+                examples : ['examples'],
                 tests : ['tests', 'test.js'],
-                docs : ['desc.md', 'title.txt']
+                docs : ['desc.md', 'title.txt', 'desc.wiki']
             };
         },
 
@@ -160,6 +150,7 @@ console.log('declitem %s', item.block)
                 'examples' : 'ExamplesLevelNode',
                 'test.js'  : 'TestsLevelNode',
                 'desc.md'  : 'DocLevelNode',
+                'desc.wiki'  : 'DocLevelNode',
                 'title.txt'  : 'DocLevelNode',
                 '_catalogue': 'DocCatalogueNode'
             };
@@ -171,14 +162,13 @@ console.log('declitem %s', item.block)
                 o = {
                     root  : this.root,
                     level : this.path,
-                    item  : this.getSetItem(item)
+                    item  : this.getSetItem(item),
+                    levels: this.sources
                 };
 
             var LevelNodeCls = registry.getNodeClass(this.getNodeClsForTech(item.tech)),
                 levelnid = LevelNodeCls.createId(o),
                 levelNode;
-
-            console.log('levelid %s', levelnid);
 
             if(arch.hasNode(levelnid)) {
                 levelNode = arch.getNode(levelnid);
