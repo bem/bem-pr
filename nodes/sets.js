@@ -99,7 +99,6 @@ module.exports = function(registry) {
 
                 return Q.when(base.call(this), function(level) {
                     var realLevel = arch.getChildren(level),
-                        getNodeClassForTech = _t.getNodeClsForTech.bind(_t),
                         decls = _t.scanSources();
 
                     decls.unshift({
@@ -187,7 +186,9 @@ module.exports = function(registry) {
         'create-desc.md-node': function(item, parents, children) {
             var level = this['create-default-level-node'].apply(this, arguments);
 
-            this.ctx.arch.addChildren(level, 'desktop.sets/catalogue.doc*');
+            this.ctx.arch.addChildren(
+                level,
+                PATH.join(this.level.getRelPathByObj(this.item, this.item.tech), 'catalogue.doc*'));
 
             return level;
         },
