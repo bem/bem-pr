@@ -108,6 +108,13 @@ module.exports = function(registry) {
                         suffix: '_catalogue'
                     });
 
+                    decls.unshift({
+                        block: 'index',
+                        tech: 'index',
+                        level: '',
+                        suffix: 'index'
+                    });
+
                     decls.forEach(function(item) {
                         // creating levels node for item (examples, tests, whatever)
                         var levelNode = (_t['create-' + item.tech + '-node'] || _t['create-default-level-node']).call(_t, item, level, realLevel),
@@ -126,16 +133,8 @@ module.exports = function(registry) {
 
         },
 
-        getSourceItemsMap : function() {
-            return {
-                examples : ['examples'],
-                tests : ['tests', 'test.js'],
-                docs : ['desc.md', 'title.txt', 'desc.wiki']
-            };
-        },
-
         getSourceItemTechs : function() {
-            var map = this.getSourceItemsMap();
+            var map = this.__self.getSourceItemsMap();
 
             var r = _.uniq(Object.keys(map).reduce(function(techs, name) {
                     return techs.concat(map[name]);
@@ -151,7 +150,8 @@ module.exports = function(registry) {
                 'desc.md'  : 'DocLevelNode',
                 'desc.wiki'  : 'DocLevelNode',
                 'title.txt'  : 'DocLevelNode',
-                '_catalogue': 'DocCatalogueNode'
+                '_catalogue': 'DocCatalogueNode',
+                'index': 'DocIndexNode'
             };
             return suffix2class[suffix];
         },
@@ -166,21 +166,17 @@ module.exports = function(registry) {
                 };
 
             var LevelNodeCls = registry.getNodeClass(this.getNodeClsForTech(item.tech)),
-                levelnid = LevelNodeCls.createId(o),
+                levelId = LevelNodeCls.createId(o),
                 levelNode;
 
-            if(arch.hasNode(levelnid)) {
-                levelNode = arch.getNode(levelnid);
+            if(arch.hasNode(levelId)) {
+                levelNode = arch.getNode(levelId);
             } else {
                 levelNode = LevelNodeCls.create(o);
                 arch.setNode(levelNode, parents, children);
             }
 
             return levelNode;
-        },
-
-        '1create-examples-node': function(item, parents, children) {
-
         },
 
         'create-desc.md-node': function(item, parents, children) {
@@ -191,10 +187,6 @@ module.exports = function(registry) {
                 PATH.join(this.level.getRelPathByObj(this.item, this.item.tech), 'catalogue.doc*'));
 
             return level;
-        },
-
-        '1create-_catalogue-node': function(item, parents, children) {
-
         },
 
         getSetItem: function(item) {
@@ -210,6 +202,15 @@ module.exports = function(registry) {
             return sourceToSet[sourceTech];
         }
 
+    }, {
+
+        getSourceItemsMap : function() {
+            return {
+                //examples : ['examples'],
+                tests : ['tests', 'test.js'],
+                docs : ['desc.md', 'title.txt', 'desc.wiki']
+            };
+        }
     });
 
 };

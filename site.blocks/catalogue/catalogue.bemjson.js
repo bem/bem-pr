@@ -51,7 +51,7 @@ BEM.JSON.decl('catalogue', {
 
        var typ = ctx.mod('type'),
            env = ctx.tParam('environ'),
-           root = env['site-root'] + '/index/index.html',
+           root = '../index/index.html',
            json = [];
 
        typ === 'showcase' || json.push({

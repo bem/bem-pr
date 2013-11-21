@@ -3,8 +3,6 @@
 var PATH = require('path'),
     BEM = require('bem'),
     Q = BEM.require('q'),
-    QFS = BEM.require('q-fs'),
-    LOGGER = BEM.logger,
     U = BEM.util,
     MD = require('marked').setOptions({ gfm : true, pedantic : false, sanitize : false }),
     SHMAKOWIKI = require('shmakowiki'),
@@ -38,6 +36,10 @@ module.exports = function(registry) {
 
         },
 
+        getSourceBundleName: function() {
+            return 'catalogue';
+        },
+
         alterArch: function() {
 
             return function() {
@@ -68,6 +70,7 @@ module.exports = function(registry) {
                                 root: this.root,
                                 level: this.level,
                                 item: this.item}),
+                            sourceBundle: this.getSourceBundleName(),
                             item: U.extend({}, _this.item)
                         }),
 
@@ -88,15 +91,23 @@ module.exports = function(registry) {
                 arch.setNode(docNode, groupId, docSourceNode.getId());
 
                 var cat = this.__self.createId({
-                    root: this.root,
-                    level: this.level,
-                    item: {
-                        block: 'catalogue'
-                    }
-                }).slice(0, -1);
+                        root: this.root,
+                        level: this.level,
+                        item: {
+                            block: 'catalogue'
+                        }
+                    }).slice(0, -1),
 
-                if (groupId !== cat) {
-                    arch.addChildren(docNode.getId(), 'desktop.sets/catalogue.doc');
+                    index = this.__self.createId({
+                        root: this.root,
+                        level: this.level,
+                        item: {
+                            block: 'index'
+                        }
+                    }).slice(0, -1);
+
+                if (groupId !== cat && groupId !== index) {
+                    arch.addChildren(docNode.getId(), cat);
                 }
             }
         },
@@ -171,12 +182,13 @@ module.exports = function(registry) {
     registry.decl('DocNode', 'GeneratedFileNode', {
 
         __constructor : function(o) {
-            this.source = o.path + '.bemjson.js';
+            this.source = o.path + '.data.json';
             o.path += '.html';
 
             this.__base(o);
             this.item = o.item;
-            this.level = o.level;//typeof o.level === 'string'? createLevel(o.level): o.level;
+            this.level = typeof o.level === 'string'? createLevel(o.level): o.level;
+            this.sourceBundle = o.sourceBundle;
             this.rootLevel = createLevel(this.root);
         },
 
@@ -198,12 +210,11 @@ module.exports = function(registry) {
                             data: json,
                             environ: {
                                 'id': 'site',
-                                'name': 'catalogue'
-                                //                                'site-root': SITE_ROOT
+                                'name': _this.sourceBundle
                             }
                         });
 
-                        return U.writeFile(PATH.join(PATH.dirname(_this.path), _this.item.block) + '.html', BEMHTML.apply(json));
+                        return U.writeFile(PATH.join(_this.root, PATH.dirname(_this.path), _this.item.block) + '.html', BEMHTML.apply(json));
 
                     });
             });
@@ -211,8 +222,8 @@ module.exports = function(registry) {
 
         getResource : function(item) {
 
-            var prefix = createLevel(this.level).getByObj({
-                    block: 'catalogue'
+            var prefix = this.level.getByObj({
+                    block: this.sourceBundle
                 });
 
             var bemjson = this.getBemjson(prefix),
@@ -224,7 +235,7 @@ module.exports = function(registry) {
 
         getBemjson : function(prefix) {
 
-            var path = PATH.join(PATH.dirname(prefix), '_catalogue.bemjson.js');
+            var path = PATH.join(PATH.dirname(prefix), '_' + this.sourceBundle + '.bem.json.js');
             return U.readFile(path)
                 .then(function(data) {
                     return ( new Function('global', 'BEM', '"use strict";' + data + ';return BEM.JSON;') )();
@@ -234,16 +245,11 @@ module.exports = function(registry) {
 
         getBemhtml : function(prefix) {
 
-            var path = PATH.join(PATH.dirname(prefix), '_catalogue.bemhtml.js');
+            var path = PATH.join(PATH.dirname(prefix), '_' + this.sourceBundle + '.bemhtml.js');
             return Q.resolve(require(path).BEMHTML);
 
         }
 
-    }, {
-
-        _createPath: function(o) {
-            return o.level.slice(0, -4);
-        }
     });
 
     registry.decl('DocSourceNode', 'GeneratedFileNode', {
@@ -252,7 +258,7 @@ module.exports = function(registry) {
             this.__base(o);
             this.item = o.item;
             this.level = typeof o.level === 'string'? createLevel(o.level): o.level;
-            this.path += '.bemjson.js';
+            this.path += '.data.json';
             this.rootLevel = createLevel(this.root);
             this.sources = o.sources;
             this.levels = o.levels;
@@ -413,18 +419,22 @@ module.exports = function(registry) {
 
             var _this = this;
 
-            return U.mkdirp(PATH.dirname(this.path))
-                .then(function() {
-                    return U.writeFile(_this.path, 'exports.blocks = ' + JSON.stringify([
-                                    { 'block' : 'global' },
-                                    { 'block' : 'page' },
-                                    { 'block' : 'catalogue' },
-                                    { 'block' : 'block' },
-                                    { 'block' : 'example' },
-                                    { 'block' : 'b-text' },
-                                    { 'block' : 'b-link' }
-                                ]) + ';');
+            return Q.all([U.mkdirp(PATH.dirname(this.path)), this.getSourceContent()])
+                .spread(function(mkdir, content) {
+                    return U.writeFile(_this.path, content);
                 })
+        },
+
+        getSourceContent: function() {
+            return 'exports.blocks = ' + JSON.stringify([
+                { 'block': 'global' },
+                { 'block': 'page' },
+                { 'block': 'catalogue' },
+                { 'block': 'block' },
+                { 'block': 'example' },
+                { 'block': 'b-text' },
+                { 'block': 'b-link' }
+            ]) + ';'
         }
 
     });
@@ -463,5 +473,117 @@ module.exports = function(registry) {
         }
     });
 
+    registry.decl('DocIndexNode', 'DocLevelNode', {
 
+        __constructor : function(o) {
+            this.__base(o);
+        },
+
+        getSourceBundleName: function() {
+            return 'index';
+        },
+
+        getDocNodeClass: function() {
+            return 'IndexBundleNode';
+        },
+
+        getDocSourceNodeClass: function() {
+            return 'IndexSourceNode';
+        }
+
+    });
+
+    registry.decl('IndexSourceNode', 'CatalogueSourceNode', {
+
+        __constructor: function(o) {
+            this.__base(o);
+
+            this.item = o.item;
+            this.levels = o.levels;
+        },
+
+        getSourceContent: function() {
+
+            return 'exports.blocks = ' + JSON.stringify([
+                { 'block': 'global' },
+                { 'block': 'page', mods: { type: 'index' } },
+                { 'block': 'catalogue', mods: { type: 'showcase' } },
+                { 'block': 'catalogue', elems: ['item'] },
+                { 'block': 'block' }
+            ]) + ';'
+        },
+
+        make: function() {
+            var _this = this;
+
+            var docTechs = registry.getNodeClass('SetsLevelNode')
+                .getSourceItemsMap()['docs'];
+
+            return this.__base()
+                .then(function() {
+
+                    var blocks = {};
+
+                    _this.levels.forEach(function(level) {
+                        level = createLevel(level);
+
+                        level.getItemsByIntrospection()
+                            .filter(function(item) {
+                                return ~docTechs.indexOf(item.tech);
+                            })
+                            .map(function(item) {
+                                blocks[item.block] = true;
+                            });
+
+                    });
+
+                    var data = Object.keys(blocks)
+                        .map(function(block) {
+
+                            return {
+                                name: block,
+                                url: '../' + block + '/' + block + '.html',
+                                title: block
+                            };
+                        });
+
+                    return U.writeFile(
+                        PATH.join(PATH.dirname(_this.path), _this.item.block + '.data.json'),
+                        JSON.stringify(data));
+                })
+        }
+    });
+
+    registry.decl('IndexBundleNode', 'CatalogueBundleNode', {
+
+        alterArch : function() {
+            var base = this.__base();
+            return function() {
+
+                var _this = this,
+                    arch = _this.ctx.arch;
+
+                return Q.when(base.call(_this), function(bundle) {
+                    var docNode = registry.getNodeClass('DocNode')
+                            .create({
+                                root: _this.root,
+                                level: PATH.dirname(_this.path),
+                                path: _this.__self.createNodePrefix({
+                                    root: _this.root,
+                                    level: _this.level,
+                                    item: _this.item}),
+                                sourceBundle: 'index',
+                                item: U.extend({}, _this.item)
+                            });
+
+                    arch.setNode(docNode, _this.path, [
+                        _this.getBundlePath('bemhtml.js'),
+                        _this.getBundlePath('bem.json.js')]
+                        .map(function(path) {
+                            return PATH.join(PATH.dirname(path), '_' + PATH.basename(path));
+                        }));
+                })
+            }
+        }
+    });
 }

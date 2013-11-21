@@ -12,7 +12,7 @@ exports.getTechs = function() {
         'deps.js': 'v2/deps.js',
         'js': 'v2/js-i',
         'css': 'v2/css',
-        'bem.json.js': PATH.resolve(__dirname, '../techs/bemjson.js'),
+        'bem.json.js': PATH.resolve(__dirname, '../techs/bem.json.js'),
         'bemhtml': PATH.resolve(this.projectRoot, 'libs/bem-bl/blocks-common/i-bem/bem/techs/v2/bemhtml.js')
     };
 };
