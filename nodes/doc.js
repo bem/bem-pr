@@ -193,7 +193,7 @@ module.exports = function(registry) {
         },
 
         make: function() {
-            return this.buildHtml(U.readFile(this.source));
+            return this.buildHtml(U.readFile(PATH.resolve(this.root, this.source)));
         },
 
         buildHtml: function(json) {
