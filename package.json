@@ -8,15 +8,12 @@
   },
   "dependencies": {
     "phantomjs": "~1.9.1",
-    "mocha-phantomjs": "~2.0.2"
+    "mocha-phantomjs": "~2.0.2",
+    "marked": "~0.2.5",
+    "shmakowiki": "~0.4.0"
   },
   "peerDependencies": {
     "bem": "~0.6.12"
-  },
-  "devDependencies": {
-    "bem": "~0.6.12",
-    "marked": "~0.2.5",
-    "shmakowiki": "~0.4.0"
   },
   "keywords": [
     "bem",
