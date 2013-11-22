@@ -25,7 +25,7 @@ module.exports = function(registry) {
                     arch = _t.ctx.arch;
 
                 return Q.when(base.call(_t), function(level) {
-                    var realLevel = arch.getChildren(level),
+                    var realLevel = PATH.join(level, '.bem', 'level.js'),
                         decls = _t.scanSources();
 
                     decls.forEach(function(item) {
