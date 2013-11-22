@@ -6,4 +6,6 @@ module.exports = function(registry) {
     require('./tests')(registry);
     require('./sets')(registry);
     require('./doc')(registry);
+    require('./catalogue')(registry);
+    require('./toc')(registry);
 };
