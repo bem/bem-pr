@@ -9,17 +9,14 @@
   "dependencies": {
     "phantomjs": "~1.9.1",
     "mocha-phantomjs": "~2.0.2",
+    "marked": "~0.2.5",
+    "shmakowiki": "~0.4.0",
     "underscore": "~1.5.2",
     "q": "~0.9.7",
     "q-io": "~1.10.4"
   },
   "peerDependencies": {
     "bem": "0.6.x || 0.7.x"
-  },
-  "devDependencies": {
-    "bem": "~0.6.12",
-    "marked": "~0.2.5",
-    "shmakowiki": "~0.4.0"
   },
   "keywords": [
     "bem",
