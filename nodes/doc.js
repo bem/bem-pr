@@ -90,24 +90,26 @@ module.exports = function(registry) {
                 arch.setNode(docSourceNode);
                 arch.setNode(docNode, groupId, docSourceNode.getId());
 
-                var cat = this.__self.createId({
-                        root: this.root,
-                        level: this.level,
-                        item: {
-                            block: 'catalogue'
-                        }
-                    }).slice(0, -1),
+                if (this.getSourceBundleName()) {
+                    var cat = this.__self.createId({
+                            root: this.root,
+                            level: this.level,
+                            item: {
+                                block: this.getSourceBundleName()
+                            }
+                        }).slice(0, -1),
 
-                    index = this.__self.createId({
-                        root: this.root,
-                        level: this.level,
-                        item: {
-                            block: 'index'
-                        }
-                    }).slice(0, -1);
+                        index = this.__self.createId({
+                            root: this.root,
+                            level: this.level,
+                            item: {
+                                block: 'index'
+                            }
+                        }).slice(0, -1);
 
-                if (groupId !== cat && groupId !== index) {
-                    arch.addChildren(docNode.getId(), cat);
+                    if (groupId !== cat && groupId !== index) {
+                        arch.addChildren(docNode.getId(), cat);
+                    }
                 }
             }
         },

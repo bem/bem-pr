@@ -150,6 +150,7 @@ module.exports = function(registry) {
                 'desc.md'  : 'DocLevelNode',
                 'desc.wiki'  : 'DocLevelNode',
                 'title.txt'  : 'DocLevelNode',
+                'js'  : 'JsDocLevelNode',
                 '_catalogue': 'DocCatalogueNode',
                 'index': 'DocIndexNode'
             };
@@ -208,7 +209,8 @@ module.exports = function(registry) {
             return {
                 examples : ['examples'],
                 tests : ['tests', 'test.js'],
-                docs : ['desc.md', 'title.txt', 'desc.wiki']
+                docs : ['desc.md', 'title.txt', 'desc.wiki'],
+                jsdoc: ['js']
             };
         }
     });
