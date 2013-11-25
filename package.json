@@ -13,7 +13,8 @@
     "shmakowiki": "~0.4.0",
     "underscore": "~1.5.2",
     "q": "~0.9.7",
-    "q-io": "~1.10.4"
+    "q-io": "~1.10.4",
+    "jsdoc-bem": "https://github.com/bem/bem-jsdoc3-plugin/archive/master.tar.gz"
   },
   "peerDependencies": {
     "bem": "0.6.x || 0.7.x"
