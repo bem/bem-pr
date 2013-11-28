@@ -15,13 +15,15 @@
     "jsdoc-bem": "~0.1.0",
     "vow": "~0.3.12",
     "bemhtml-compat": "~0.0.4",
-    "bem-xjst": "~0.3.1"
+    "bem-xjst": "~0.3.1",
+    "lodash": "~2.4.1",
+    "q-io": "~1.10.6"
   },
   "devDependencies": {
-    "bem": "~0.6.12"
+    "bem": "~0.7.2"
   },
   "peerDependencies": {
-    "bem": "~0.6.12"
+    "bem": "~0.7.2"
   },
   "keywords": [
     "bem",
@@ -33,7 +35,6 @@
     "Sergey Belov <peimei@ya.ru> (http://github.com/arikon)",
     "Mikhail Berezin <karamadjong@yandex-team.ru> (http://github.com/mishaberezin)",
     "Sergey Tatarintsev <sevinf@yandex-team.ru> (http://github.com/SevInf)"
-
   ],
   "license": "MIT"
 }
