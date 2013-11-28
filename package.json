@@ -11,20 +11,20 @@
     "mocha-phantomjs": "~2.0.2",
     "marked": "~0.2.5",
     "shmakowiki": "~0.4.0",
-    "underscore": "~1.5.2",
-    "q": "~0.9.7",
-    "q-io": "~1.10.4",
     "jsdoc": "~3.3.0",
     "jsdoc-bem": "~0.1.0",
     "vow": "~0.3.12",
     "bemhtml-compat": "~0.0.4",
-    "bem-xjst": "~0.3.1"
+    "bem-xjst": "~0.3.1",
+    "lodash": "~2.4.1",
+    "q": "~0.9.7",
+    "q-io": "~1.10.6"
   },
   "devDependencies": {
-    "bem": "~0.6.12"
+    "bem": "~0.7.2"
   },
   "peerDependencies": {
-    "bem": "0.6.x || 0.7.x"
+    "bem": "~0.7.2"
   },
   "keywords": [
     "bem",

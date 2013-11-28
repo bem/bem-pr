@@ -8,7 +8,7 @@ var FS = require('fs'),
     PATH = require('path'),
     BEM = require('bem'),
     Q = require('q'),
-    _ = require('underscore'),
+    _ = require('lodash/dist/lodash.underscore'),
     LOGGER = BEM.logger,
 
     createLevel = BEM.createLevel,
