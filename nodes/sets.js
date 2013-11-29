@@ -226,7 +226,7 @@ module.exports = function(registry) {
 
         getSourceItemsMap : function() {
             return {
-//                examples : ['examples'],
+                examples : ['examples'],
                 tests : ['tests', 'test.js'],
                 docs : ['desc.md', 'title.txt', 'desc.wiki'],
                 jsdoc: ['js']
