@@ -2,9 +2,13 @@
 
 var PATH = require('path'),
     CP = require('child_process'),
+    VM = require('vm'),
+    UTIL = require('util'),
     BEM = require('bem'),
     Q = BEM.require('q'),
+    VOW = require('vow'),
     U = BEM.util,
+    LOGGER = BEM.logger,
     createLevel = BEM.createLevel;
 
 module.exports = function(registry) {
@@ -16,7 +20,7 @@ module.exports = function(registry) {
         },
 
         getDocNodeClass: function() {
-            return 'JsDocBundleNode';
+            return 'JsDocNode';
         },
 
         getDocSourceNodeClass: function() {
@@ -24,7 +28,7 @@ module.exports = function(registry) {
         },
 
         getSourceBundleName: function() {
-            return null;
+            return 'jscatalogue';
         }
 
     }, {
@@ -95,10 +99,68 @@ module.exports = function(registry) {
 
     });
 
-    registry.decl('JsDocBundleNode', 'Node', {
+    registry.decl('JsDocNode', 'DocNode', {
 
         __constructor: function(o) {
-            this.id = o.path + '.jsdoc.bundle';
+
+            var path = o.path;
+            o.path += '.jsdoc';
+
+            this.__base(o);
+
+            this.source = path + '.jsdoc.json';
+        },
+
+        buildHtml: function(json) {
+            var _this = this;
+
+            return json.then(function(json) {
+                json = JSON.parse(json);
+                return _this.getResource(_this.item)
+                    .spread(function(BEMTREE, BEMHTML) {
+
+                        try {
+                            return BEMTREE.apply({
+                                block: 'page',
+                                data: json
+                            })
+                            .then(function(bemjson) {
+                                try {
+                                    var html = BEMHTML.apply(bemjson);
+                                } catch (err) {
+                                    return Q.reject(UTIL.format('Failed to apply bemhtml to the data file %s\n%s', _this.source, err.stack));
+                                }
+
+                                return U.writeFile(PATH.resolve(_this.root, _this.path), html);
+                            });
+                        } catch (err) {
+                            return Q.reject(UTIL.format('Failed to apply bemtree to the data file %s\n%s', _this.source, err.stack));
+                        }
+
+                    });
+            });
+        },
+
+        getBemjson : function(prefix) {
+
+            var path = PATH.join(PATH.dirname(prefix), this.sourceBundle + '.bemtree.js');
+            return U.readFile(path)
+                .then(function(data) {
+                    var context = VM.createContext({
+                        console: console,
+                        Vow: VOW
+                    });
+
+                    try {
+                        VM.runInContext(data, context);
+                    } catch (err) {
+                        return Q.reject('Failed to evaluate bemtree file %s', path);
+                    }
+
+                    return context.BEMTREE;
+                });
+
         }
+
     });
 }

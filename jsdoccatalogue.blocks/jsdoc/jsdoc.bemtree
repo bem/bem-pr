@@ -1,0 +1,261 @@
+block jsdoc {
+
+    default: applyNext(this._data = this.ctx.data)
+
+    content: {
+        var data = this._data;
+        return applyCtx([
+            {
+                elem: 'block-name',
+                content: data.blockName
+            },
+            data.description && {
+                elem: 'description',
+                content: data.description
+            },
+            data.staticMembers && {
+                elem: 'members',
+                elemMods: { type: 'static' }
+            },
+            data.instanceMembers && {
+                elem: 'members',
+                elemMods: { type: 'instance' }
+            },
+            data.mods && data.mods.length ? { elem: 'mods' } : '',
+            data.events && data.events.length ? { elem: 'events' } : ''
+        ]);
+    }
+
+    elem members, content: {
+        var type = this.ctx.elemMods.type,
+            modIdx = this.ctx.modIdx,
+            isModMember = modIdx !== undefined,
+            data = isModMember ? this._data.mods[modIdx] : this._data,
+            members = data[type + 'Members'];
+
+        return [
+            {
+                block: 'heading',
+                mods: { level: isModMember ? 3 : 2 },
+                content: type + ' members'
+            },
+            members.methods && {
+                elem: 'methods',
+                elemMods: { type: type },
+                modIdx: modIdx
+            },
+            members.properties && members.properties.length ? {
+                elem: 'properties',
+                elemMods: { type: type },
+                modIdx: modIdx
+            } : ''
+        ];
+
+    }
+
+
+    elem methods, content: {
+        var type = this.ctx.elemMods.type,
+            modIdx = this.ctx.modIdx,
+            isModMember = modIdx !== undefined,
+            data = isModMember ? this._data.mods[modIdx] : this._data,
+            methods = data[type + 'Members'].methods;
+
+        return [
+            {
+                block: 'heading',
+                mods: { level: isModMember ? 4 : 3 },
+                content: 'Methods'
+            },
+            Object.keys(methods)
+                .filter(function(methodType) {
+                    return methods[methodType].length;
+                })
+                .map(function(methodType) {
+                return [
+                    {
+                        block: 'heading',
+                        mods: { level: isModMember ? 5 : 4 },
+                        content: methodType
+                    },
+                    methods[methodType].map(function(method) {
+                        return {
+                            elem: 'method',
+                            elemMods: { type: methodType },
+                            content: [
+                                method.deprecated && {
+                                    elem: 'deprecated',
+                                    content: 'Deprecated ' + method.deprecated
+                                },
+                                method.final && {
+                                    elem: 'final',
+                                    content: 'final'
+                                },
+                                {
+                                    elem: 'method-name',
+                                    content: method.name
+                                },
+                                {
+                                    elem: 'method-description',
+                                    content: method.description
+                                },
+                                method.params && method.params.length ?
+                                    method.params.map(function(param) {
+                                        return {
+                                            elem: 'param',
+                                            data: param
+                                        }
+                                    }) : '',
+                                method.returns && method.returns.length ?
+                                    method.returns.map(function(returns) {
+                                        return {
+                                            elem: 'returns',
+                                            content: [
+                                                {
+                                                    elem: 'returns-description',
+                                                    content: returns.description
+                                                },
+                                                returns.types.join(', ')
+                                            ]
+                                        }
+                                    }) : '',
+                                method.fires && method.fires.length ?
+                                    method.fires.join(', ') : ''
+                            ]
+                        };
+                    })
+                ];
+            })
+        ];
+
+    }
+
+    elem properties, content: {
+        var type = this.ctx.elemMods.type,
+            modIdx = this.ctx.modIdx,
+            isModMember = modIdx !== undefined,
+            data = isModMember ? this._data.mods[modIdx] : this._data,
+            properties = data[type + 'Members'].properties;
+
+        return [
+            {
+                block: 'heading',
+                mods: { level: isModMember ? 3 : 4 },
+                content: 'Properties'
+            },
+            properties.map(function(property) {
+                return {
+                    elem: 'property',
+                    content: [
+                        property.deprecated && {
+                            elem: 'deprecated',
+                            content: 'Deprecated ' + property.deprecated
+                        },
+                        {
+                            elem: 'property-name',
+                            content: property.name
+                        },
+                        {
+                            elem: 'property-description',
+                            content: property.description
+                        },
+                        property.types && property.types.length ? {
+                            elem: 'property-types',
+                            content: 'Types: ' + property.types.join(', ')
+                        } : ''
+                    ]
+                };
+            })
+        ];
+
+    }
+
+    elem mods, content: [
+        {
+            block: 'heading',
+            mods: { level: 2 },
+            content: 'Modifiers'
+        },
+        this._data.mods.map(function(mod, idx) {
+            return {
+                elem: 'mod',
+                content: [
+                    {
+                        elem: 'mod-name',
+                        content: mod.name
+                    },
+                    {
+                        elem: 'mod-value',
+                        content: mod.value
+                    },
+                    {
+                        elem: 'mod-description',
+                        content: mod.description
+                    },
+                    mod.staticMembers && {
+                        elem: 'members',
+                        elemMods: { type: 'static' },
+                        modIdx: idx
+                    },
+                    mod.instanceMembers && {
+                        elem: 'members',
+                        elemMods: { type: 'instance' },
+                        modIdx: idx
+                    }
+                ]
+            };
+        })
+    ]
+
+    elem events, content: [
+        {
+            block: 'heading',
+            mods: { level: 2 },
+            content: 'Events'
+        },
+        this._data.events.map(function(event) {
+            return {
+                elem: 'event',
+                content: [
+                    {
+                        elem: 'event-name',
+                        content: event.name
+                    },
+                    {
+                        elem: 'event-params',
+                        content: event.params.map(function(param) {
+                            return {
+                                elem: 'param',
+                                data: param
+                            }
+                        })
+                    }
+                ]
+            };
+        })
+    ]
+
+    elem param, content: {
+        var param = this.ctx.data;
+
+        return [
+            {
+                elem: 'param-name',
+                content: (param.optional ? '[' : '') + param.name + (param.optional ? ']' : '')
+            },
+            {
+                elem: 'param-description',
+                content: param.description
+            },
+            param.types && param.types.length ? {
+                elem: 'param-types',
+                content: param.types.join(', ')
+            } : '',
+            param.default && {
+                elem: 'param-default',
+                content: 'Default: ' + param.default
+            }
+        ]
+    }
+
+}

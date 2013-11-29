@@ -9,4 +9,5 @@ module.exports = function(registry) {
     require('./catalogue')(registry);
     require('./toc')(registry);
     require('./jsdoc')(registry);
+    require('./jscatalogue')(registry);
 };

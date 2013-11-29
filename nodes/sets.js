@@ -101,6 +101,14 @@ module.exports = function(registry) {
                     var realLevel = arch.getChildren(level),
                         decls = _t.scanSources();
 
+
+                    decls.unshift({
+                        block: 'jscatalogue',
+                        tech: '_jscatalogue',
+                        level: '',
+                        suffix: '_jscatalogue'
+                    });
+
                     decls.unshift({
                         block: 'catalogue',
                         tech: '_catalogue',
@@ -152,6 +160,7 @@ module.exports = function(registry) {
                 'title.txt'  : 'DocLevelNode',
                 'js'  : 'JsDocLevelNode',
                 '_catalogue': 'DocCatalogueNode',
+                '_jscatalogue': 'JsDocCatalogueNode',
                 'index': 'DocIndexNode'
             };
             return suffix2class[suffix];
@@ -190,6 +199,16 @@ module.exports = function(registry) {
             return level;
         },
 
+        'create-js-node': function(item, parents, children) {
+            var level = this['create-default-level-node'].apply(this, arguments);
+
+            this.ctx.arch.addChildren(
+                level,
+                PATH.join(this.level.getRelPathByObj(this.item, this.item.tech), 'jscatalogue.jsdoc*'));
+
+            return level;
+        },
+
         getSetItem: function(item) {
             return BEM.util.extend({}, item, {tech: this.getSetTech(item.tech)});
         },
@@ -207,7 +226,7 @@ module.exports = function(registry) {
 
         getSourceItemsMap : function() {
             return {
-                examples : ['examples'],
+//                examples : ['examples'],
                 tests : ['tests', 'test.js'],
                 docs : ['desc.md', 'title.txt', 'desc.wiki'],
                 jsdoc: ['js']
