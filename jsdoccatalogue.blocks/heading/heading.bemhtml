@@ -1,0 +1,3 @@
+block heading, tag: 'h2'
+
+block heading, this.ctx.mods && this.ctx.mods.level, tag: 'h' + this.ctx.mods.level

@@ -216,7 +216,9 @@ module.exports = function(registry) {
                             }
                         });
 
-                        return U.writeFile(PATH.join(_this.root, PATH.dirname(_this.path), _this.item.block) + '.html', BEMHTML.apply(json));
+                        return U.writeFile(
+                            PATH.join(_this.root, PATH.dirname(_this.path), _this.item.block) + '.html',
+                            BEMHTML.apply(json));
 
                     });
             });

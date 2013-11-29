@@ -1,0 +1,33 @@
+block page, default: {
+    return applyCtx({
+        block: 'page',
+        title: this.ctx.data.blockName, // TODO
+        favicon: '/favicon.ico', // TODO
+        head: [
+            {
+                elem: 'meta',
+                attrs: { name: 'description', content: 'TODO' }
+            },
+            {
+                elem: 'css',
+                url : '../jscatalogue/_jscatalogue.css', // TODO
+                ie  : false
+            },
+            {
+                elem: 'css',
+                url : '_index.ie.css', // TODO
+                ie  : 'lte IE 9'
+            }
+        ],
+        content: [
+            {
+                block: 'jsdoc',
+                data: this.ctx.data
+            },
+            {
+                elem: 'js',
+                url : '../jscatalogue/_jscatalogue.js' // TODO
+            }
+        ]
+    })
+}
