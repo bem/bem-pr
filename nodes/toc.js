@@ -6,8 +6,15 @@ var PATH = require('path'),
     U = BEM.util,
     createLevel = BEM.createLevel;
 
+/**
+ * Declare nodes responsible of building the documentation index (toc).
+ */
 module.exports = function(registry) {
-    
+
+    /**
+     * The high level node for documentation index. On execution creates IndexBundleNode and IndexSourceNode nodes.
+     * @class DocLevelNode
+     */
     registry.decl('DocIndexNode', 'DocLevelNode', {
 
         __constructor: function(o) {
@@ -28,6 +35,11 @@ module.exports = function(registry) {
 
     });
 
+    /**
+     * The node does only create a source file to build the index. Will create a data.json file describing
+     * the documented blocks on execution.
+     * @class JsDocSourceNode
+     */
     registry.decl('IndexSourceNode', 'CatalogueSourceNode', {
 
         __constructor: function(o) {
@@ -37,6 +49,10 @@ module.exports = function(registry) {
             this.levels = o.levels;
         },
 
+        /**
+         * Return the string content to write into the source file.
+         * @returns {string} Content.
+         */
         getSourceContent: function() {
 
             return 'exports.blocks = ' + JSON.stringify([
@@ -51,6 +67,7 @@ module.exports = function(registry) {
         make: function() {
             var _this = this;
 
+            // get tech names which represent the documentation in some form (md, title.txt, etc)
             var docTechs = registry.getNodeClass('SetsLevelNode')
                 .getSourceItemsMap()['docs'];
 
@@ -59,6 +76,7 @@ module.exports = function(registry) {
 
                     var blocks = {};
 
+                    // collect the blocks which have documentation files on the levels
                     _this.levels.forEach(function(level) {
                         level = createLevel(level);
 
@@ -72,6 +90,7 @@ module.exports = function(registry) {
 
                     });
 
+                    // build a json file. Every collected block will be there as an object with name, title and url properties
                     var data = Object.keys(blocks)
                         .map(function(block) {
 
@@ -89,6 +108,12 @@ module.exports = function(registry) {
         }
     });
 
+    /**
+     * Builds the index bundle. Inherits from the BundleNode so behavior is the same with a little addition. Extra DocNode
+     * instance is created which depends on bundle's bemhtml and bem.json files. This node will create html by applying
+     * bemhtml, bem.json and data.json together.
+     * @class CatalogueBundleNode
+     */
     registry.decl('IndexBundleNode', 'CatalogueBundleNode', {
 
         alterArch: function() {
