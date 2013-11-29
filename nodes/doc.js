@@ -8,9 +8,16 @@ var PATH = require('path'),
     SHMAKOWIKI = require('shmakowiki'),
     createLevel = BEM.createLevel;
 
-
+/**
+ * Declare node classes which serve the build of documentation for the blocks.
+ */
 module.exports = function(registry) {
 
+    /**
+     * The high level node for documentation. Created one per block. On execution creates so called source and doc
+     * nodes.
+     * @class DocLevelNode
+     */
     registry.decl('DocLevelNode', 'MagicNode', {
 
         __constructor : function(o) {
@@ -49,6 +56,7 @@ module.exports = function(registry) {
                     groupId = this.getId().slice(0, -1),
                     group;
 
+                // Just grouping node which does nothing
                 if (arch.hasNode(groupId)) {
                     group = arch.getNode(groupId);
                 } else {
@@ -62,6 +70,8 @@ module.exports = function(registry) {
                     }), this);
                 }
 
+
+                // add doc node. It will apply bemhtml, bem.json and data.json and create block's html
                 var docNode = registry.getNodeClass(this.getDocNodeClass())
                         .create({
                             root: this.root,
@@ -70,10 +80,13 @@ module.exports = function(registry) {
                                 root: this.root,
                                 level: this.level,
                                 item: this.item}),
+                             /* pass the name of common bundle which contains bemhtml and bem.json common
+                                for all blocks */
                             sourceBundle: this.getSourceBundleName(),
                             item: U.extend({}, _this.item)
                         }),
 
+                    // add source node for block which will create a data.json
                     docSourceNode = registry.getNodeClass(this.getDocSourceNodeClass())
                         .create({
                             root: this.root,
@@ -90,6 +103,7 @@ module.exports = function(registry) {
                 arch.setNode(docSourceNode);
                 arch.setNode(docNode, groupId, docSourceNode.getId());
 
+                // getSourceBundleName() returns non empty string link DocNode to returned common bundle
                 if (this.getSourceBundleName()) {
                     var cat = this.__self.createId({
                             root: this.root,
@@ -107,6 +121,7 @@ module.exports = function(registry) {
                             }
                         }).slice(0, -1);
 
+                    // skip linking if this node is catalogue or index
                     if (groupId !== cat && groupId !== index) {
                         arch.addChildren(docNode.getId(), cat);
                     }
@@ -114,10 +129,18 @@ module.exports = function(registry) {
             }
         },
 
+        /**
+         * Return node class name to use as DocNode.
+         * @returns {string} node class name
+         */
         getDocNodeClass: function() {
             return 'DocNode';
         },
 
+        /**
+         * Return node class name to use as SourceNode.
+         * @returns {string}
+         */
         getDocSourceNodeClass: function() {
             return 'DocSourceNode';
         },
@@ -181,6 +204,12 @@ module.exports = function(registry) {
 
     });
 
+
+    /**
+     * The node applies bemhtml, bem.json from the common bundle and data.json built by source node together and
+     * writes block's html.
+     * @class DocNode
+     */
     registry.decl('DocNode', 'GeneratedFileNode', {
 
         __constructor : function(o) {
@@ -194,6 +223,10 @@ module.exports = function(registry) {
             this.rootLevel = createLevel(this.root);
         },
 
+        /**
+         * Read data.json and build html
+         * @returns {*}
+         */
         make: function() {
             return this.buildHtml(U.readFile(PATH.resolve(this.root, this.source)));
         },
@@ -237,6 +270,11 @@ module.exports = function(registry) {
 
         },
 
+        /**
+         * Read bem.json from the common bundle.
+         * @param {String} prefix Prefix of the common bundle.
+         * @returns {Promise * Function}
+         */
         getBemjson : function(prefix) {
 
             var path = PATH.join(PATH.dirname(prefix), '_' + this.sourceBundle + '.bem.json.js');
@@ -247,6 +285,11 @@ module.exports = function(registry) {
 
         },
 
+        /**
+         * Read bemhtml from the common bundle.
+         * @param {String} prefix Prefix of the common bundle.
+         * @returns {Promise * Object}
+         */
         getBemhtml : function(prefix) {
 
             var path = PATH.join(PATH.dirname(prefix), '_' + this.sourceBundle + '.bemhtml.js');
@@ -256,6 +299,10 @@ module.exports = function(registry) {
 
     });
 
+    /**
+     * The node generates data.json for the block's documentation. Input data dddddddd
+     * @class DocSourceNode
+     */
     registry.decl('DocSourceNode', 'GeneratedFileNode', {
 
         __constructor : function(o) {
@@ -272,6 +319,7 @@ module.exports = function(registry) {
 
             var getObj = function() {
                     return {
+                        // JSON.stringify() will serialize object properties into array
                         toJSON: function() {
                             var _this = this;
                             return Object.keys(this).sort()
@@ -377,6 +425,10 @@ module.exports = function(registry) {
                 });
         },
 
+        /**
+         * Scan block levels for examples and push them into sources property.
+         * @returns {Promise * undefined}
+         */
         scanExamples: function() {
 
             return Q.all(this.levels.map(function(l) {

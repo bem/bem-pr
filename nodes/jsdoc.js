@@ -11,8 +11,16 @@ var PATH = require('path'),
     LOGGER = BEM.logger,
     createLevel = BEM.createLevel;
 
+/**
+ * Declare nodes responsible of building the documentation from jsdoc
+ */
 module.exports = function(registry) {
 
+    /**
+     * Inherited from the DocLevelNode this node is used as entry point to build jsdoc documentation for block.
+     * After execution it will extend the nodes tree with JsDocBundleNode and JsDocSourceNode instances.
+     * @class DocCatalogueNode
+     */
     registry.decl('JsDocLevelNode', 'DocLevelNode', {
 
         __constructor: function(o) {
@@ -45,6 +53,10 @@ module.exports = function(registry) {
         }
     });
 
+    /**
+     * The node does only create a source file to build a bundle. Will create a jsdoc.json file on execution.
+     * @class JsDocSourceNode
+     */
     registry.decl('JsDocSourceNode', 'GeneratedFileNode', {
 
         __constructor: function(o) {
@@ -64,12 +76,17 @@ module.exports = function(registry) {
                 })
         },
 
+        /**
+         * Return the string content to write into the source file.
+         * @returns {string} Content.
+         */
         getSourceContent: function() {
             var d = Q.defer(),
                 paths = this.sources.map(function(item) {
                     return createLevel(item.level).getPathByObj(item, item.suffix.substring(1));
                 }),
 
+                // execute jsdoc, pass block's js files paths in arguments
                 jsdoc = CP.spawn(
                     PATH.resolve(__dirname, '../node_modules/.bin/jsdoc'), [
                         '-c', PATH.resolve(__dirname, '../jsdoc.conf.json'),
@@ -99,6 +116,10 @@ module.exports = function(registry) {
 
     });
 
+    /**
+     * Builds block's jsdoc.html by applying together bemtree and bemhtml from the common bundle with block's jsdoc.json.
+     * @class JsDocNode
+     */
     registry.decl('JsDocNode', 'DocNode', {
 
         __constructor: function(o) {
@@ -111,6 +132,12 @@ module.exports = function(registry) {
             this.source = path + '.jsdoc.json';
         },
 
+        /**
+         * Overriden. Read jsdoc.json, generate a json using the common bemtree. Then apply bemhtml and write result
+         * to file.
+         * @param json
+         * @returns {Promise * undefined}
+         */
         buildHtml: function(json) {
             var _this = this;
 
@@ -141,6 +168,11 @@ module.exports = function(registry) {
             });
         },
 
+        /**
+         * Overriden. Return bemtree object by reading bemtree.js from the common bundle.
+         * @param prefix
+         * @returns {Promise * Object}
+         */
         getBemjson : function(prefix) {
 
             var path = PATH.join(PATH.dirname(prefix), this.sourceBundle + '.bemtree.js');
