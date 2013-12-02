@@ -6,7 +6,7 @@ block block {
             this._firstElem = this.ctx;
 
             applyCtx([
-                { block: 'headline', mods: { level: 3 }, content: 'Элементы' },
+                {block: 'headline', mods: {level: 3}, content: 'Элементы'},
                 this.ctx
             ]);
         }
@@ -33,7 +33,7 @@ block block {
         this._firstMod = this.ctx;
 
         applyCtx([
-            { block: 'headline', mods: { level: 5 }, content: 'Модификаторы элемента' },
+            {block: 'headline', mods: {level: 5}, content: 'Модификаторы элемента'},
             this.ctx
         ]);
     }
@@ -42,7 +42,7 @@ block block {
 
         tag: 'h4'
 
-        mix: { block: 'headline', mods: { level: 4 } }
+        mix: {block: 'headline', mods: {level: 4}}
 
     }
 

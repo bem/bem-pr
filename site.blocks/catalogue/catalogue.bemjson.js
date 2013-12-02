@@ -56,7 +56,7 @@ BEM.JSON.decl('catalogue', {
 
        typ === 'showcase' || json.push({
                block: 'menu',
-               mix: { block: 'catalogue', elem: 'navigation' },
+               mix: {block: 'catalogue', elem: 'navigation'},
                content: {
                    elem: 'item',
                    url: root,

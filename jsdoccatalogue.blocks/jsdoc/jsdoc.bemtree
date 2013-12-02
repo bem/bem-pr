@@ -15,14 +15,14 @@ block jsdoc {
             },
             data.staticMembers && {
                 elem: 'members',
-                elemMods: { type: 'static' }
+                elemMods: {type: 'static'}
             },
             data.instanceMembers && {
                 elem: 'members',
-                elemMods: { type: 'instance' }
+                elemMods: {type: 'instance'}
             },
-            data.mods && data.mods.length ? { elem: 'mods' } : '',
-            data.events && data.events.length ? { elem: 'events' } : ''
+            data.mods && data.mods.length? {elem: 'mods'} : '',
+            data.events && data.events.length? {elem: 'events'} : ''
         ]);
     }
 
@@ -36,17 +36,17 @@ block jsdoc {
         return [
             {
                 block: 'heading',
-                mods: { level: isModMember ? 3 : 2 },
+                mods: {level: isModMember? 3: 2},
                 content: type + ' members'
             },
             members.methods && {
                 elem: 'methods',
-                elemMods: { type: type },
+                elemMods: {type: type},
                 modIdx: modIdx
             },
-            members.properties && members.properties.length ? {
+            members.properties && members.properties.length? {
                 elem: 'properties',
-                elemMods: { type: type },
+                elemMods: {type: type},
                 modIdx: modIdx
             } : ''
         ];

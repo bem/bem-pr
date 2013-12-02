@@ -1,5 +1,5 @@
 ({
     mustDeps: [
-        { elem: 'mod' }
+        {elem: 'mod'}
     ]
 })

@@ -3,7 +3,7 @@
     // page.bemjson.js
     {
         block: 'headline',
-        mods: { level: 3 },
+        mods: {level: 3},
         content: 'Примечание'
     }
 

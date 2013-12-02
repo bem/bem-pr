@@ -1,6 +1,6 @@
 ({
     shouldDeps: [
-        { elems: ['ul', 'p'] },
-        { block: 'b-link' }
+        {elems: ['ul', 'p']},
+        {block: 'b-link'}
     ]
 })

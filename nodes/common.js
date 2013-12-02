@@ -18,7 +18,7 @@ function serializeBemItem() {
                 item = item.trim();
                 if(!item)
                     return keys;
-                item = { block : item };
+                item = {block: item};
             }
 
             keys.push(U.bemKey(item));

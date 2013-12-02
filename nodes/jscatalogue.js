@@ -27,7 +27,7 @@ module.exports = function(registry) {
 
         getSourceContent: function() {
             return 'exports.blocks = ' + JSON.stringify([
-                { 'block': 'page' }
+                {'block': 'page'}
             ]) + ';'
         }
 

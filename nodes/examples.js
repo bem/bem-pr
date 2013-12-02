@@ -164,7 +164,7 @@ module.exports = function(registry) {
                 item : o.source
             });
 
-            this.__base(U.extend({ path: self.createPath(o) }, o));
+            this.__base(U.extend({path: self.createPath(o)}, o));
         },
 
         make : function() {

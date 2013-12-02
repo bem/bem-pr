@@ -1,8 +1,8 @@
 ({
     mustDeps: [
-        { block: 'i-bem', elem: 'html' }
+        {block: 'i-bem', elem: 'html'}
     ],
     shouldDeps: [
-        { elem: 'environ' }
+        {elem: 'environ'}
     ]
 })

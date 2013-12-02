@@ -6,7 +6,7 @@ block link {
 
         tag: 'a'
 
-        attrs: { href: this.ctx.url }
+        attrs: {href: this.ctx.url}
 
     }
 

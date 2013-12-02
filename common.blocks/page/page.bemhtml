@@ -17,7 +17,7 @@ block page {
                             content: [
                                 {
                                     elem: 'meta',
-                                    attrs: { charset: 'utf-8' }
+                                    attrs: {charset: 'utf-8'}
                                 },
                                 {
                                     elem: 'title',
@@ -27,7 +27,7 @@ block page {
                                 (ctx.meta || ''),
 
                                 (ctx.hasOwnProperty('favicon') ?
-                                        { elem: 'favicon', url: ctx.favicon } : ''),
+                                        {elem: 'favicon', url: ctx.favicon} : ''),
 
                                 {
                                     elem: 'assets',
@@ -76,7 +76,7 @@ block page {
     elem favicon {
 
         tag: 'link',
-        attrs: { rel: 'shortcut icon', href: this.ctx.url }
+        attrs: {rel: 'shortcut icon', href: this.ctx.url}
 
     }
 

@@ -6,7 +6,7 @@ block block {
             this._firstMod = this.ctx;
 
             applyCtx([
-                { block: 'headline', mods: { level: 3 }, content: 'Модификаторы' },
+                {block: 'headline', mods: {level: 3}, content: 'Модификаторы'},
                 this.ctx
             ]);
         }
