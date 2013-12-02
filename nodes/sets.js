@@ -62,10 +62,10 @@ module.exports = function(registry) {
 
                     var node = registry.getNodeClass('SetsLevelNode')
                         .create({
-                            root    : this.root,
-                            level   : this.rootLevel,
-                            item    : { block : name, tech : 'sets' },
-                            sources : sets[name]
+                            root: this.root,
+                            level: this.rootLevel,
+                            item: {block: name, tech: 'sets'},
+                            sources: sets[name]
                         });
 
                     this.arch.setNode(node);

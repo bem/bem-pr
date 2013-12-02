@@ -1,5 +1,5 @@
 ({
     shouldDeps: [
-        { block: 'catalogue', mods: { type: 'showcase' } }
+        {block: 'catalogue', mods: {type: 'showcase'}}
     ]
 })

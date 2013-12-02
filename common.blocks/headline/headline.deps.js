@@ -1,5 +1,5 @@
 ({
     shouldDeps: [
-        { mods: { level: 1 } }
+        {mods: {level: 1}}
     ]
 })

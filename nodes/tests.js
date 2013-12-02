@@ -70,7 +70,7 @@ module.exports = function(registry) {
                             block : this.getAutogenTestBundleName(),
                             tech  : 'bemjson.js'
                         },
-                        source = U.extend({ level : this.path }, this.item),
+                        source = U.extend({level : this.path}, this.item),
                         testContent = this.getTestContent(this.decl),
                         bundleNode = registry.getNodeClass(this.bundleNodeCls).create({
                             root  : this.root,

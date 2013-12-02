@@ -1,5 +1,5 @@
 ({
     shouldDeps: [
-        { block: 'heading' }
+        {block: 'heading'}
     ]
 })

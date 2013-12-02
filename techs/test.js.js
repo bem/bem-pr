@@ -23,7 +23,7 @@ exports.techMixin = {
 
         var output = PATH.resolve(opts.outputDir, opts.outputName);
 
-        return QFS.read(output + '.bemjson.js', { charset: 'utf-8' }).then(function(bemjson) {
+        return QFS.read(output + '.bemjson.js', {charset: 'utf-8'}).then(function(bemjson) {
 
             var tests = [];
 

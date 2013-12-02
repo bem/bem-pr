@@ -27,7 +27,7 @@ block example {
             url: this._url,
             content: this.ctx.title
         },
-        { elem: 'source-switch' },
+        {elem: 'source-switch'},
         {
             elem: 'source',
             url: this._src

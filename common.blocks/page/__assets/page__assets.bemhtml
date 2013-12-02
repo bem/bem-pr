@@ -17,7 +17,7 @@ block page {
         this.ctx.url {
 
             tag: 'link'
-            attrs: { rel: 'stylesheet', href: this.ctx.url }
+            attrs: {rel: 'stylesheet', href: this.ctx.url}
 
         }
     }
@@ -28,7 +28,7 @@ block page {
 
         tag: 'script'
 
-        this.ctx.url, attrs: { src: this.ctx.url }
+        this.ctx.url, attrs: {src: this.ctx.url}
 
     }
 

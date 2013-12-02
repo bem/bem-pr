@@ -1,5 +1,5 @@
 ({
     mustDeps: [
-        { block: 'block', elems: ['elem', 'mod'] }
+        {block: 'block', elems: ['elem', 'mod']}
     ]
 })

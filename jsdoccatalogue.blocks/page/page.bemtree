@@ -6,7 +6,7 @@ block page, default: {
         head: [
             {
                 elem: 'meta',
-                attrs: { name: 'description', content: 'TODO' }
+                attrs: {name: 'description', content: 'TODO'}
             },
             {
                 elem: 'css',

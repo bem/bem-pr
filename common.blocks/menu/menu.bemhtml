@@ -9,7 +9,7 @@ block menu {
             default: {
                 applyCtx({
                     block: 'link',
-                    mix: { block: 'menu', elem: 'item' },
+                    mix: {block: 'menu', elem: 'item'},
                     url: this.ctx.url,
                     content: this.ctx.content
                 })

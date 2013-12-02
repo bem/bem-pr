@@ -56,11 +56,11 @@ module.exports = function(registry) {
         getSourceContent: function() {
 
             return 'exports.blocks = ' + JSON.stringify([
-                { 'block': 'global' },
-                { 'block': 'page', mods: { type: 'index' } },
-                { 'block': 'catalogue', mods: { type: 'showcase' } },
-                { 'block': 'catalogue', elems: ['item'] },
-                { 'block': 'block' }
+                {'block': 'global'},
+                {'block': 'page', mods: {type: 'index'}},
+                {'block': 'catalogue', mods: {type: 'showcase'}},
+                {'block': 'catalogue', elems: ['item']},
+                {'block': 'block'}
             ]) + ';'
         },
 
@@ -131,11 +131,13 @@ module.exports = function(registry) {
                             path: _this.__self.createNodePrefix({
                                 root: _this.root,
                                 level: _this.level,
-                                item: _this.item}),
+                                item: _this.item
+                            }),
                             sourceBundle: 'index',
                             item: U.extend({}, _this.item)
                         });
 
+                    // docNode depends on the minified versions of the bemhtml and bem.json
                     arch.setNode(docNode, _this.path, [
                         _this.getBundlePath('bemhtml.js'),
                         _this.getBundlePath('bem.json.js')]

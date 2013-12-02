@@ -4,7 +4,7 @@ var PATH = require('path'),
     BEM = require('bem'),
     Q = BEM.require('q'),
     U = BEM.util,
-    MD = require('marked').setOptions({ gfm : true, pedantic : false, sanitize : false }),
+    MD = require('marked').setOptions({gfm : true, pedantic : false, sanitize : false}),
     SHMAKOWIKI = require('shmakowiki'),
     createLevel = BEM.createLevel;
 
@@ -366,7 +366,7 @@ module.exports = function(registry) {
                                         return U.readFile(examplePath)
                                             .then(function(exampleDesc) {
                                                 var url = PATH.join(
-                                                    _this.rootLevel.getRelPathByObj({ block: item.block, tech: 'examples-set'}, 'examples-set'),
+                                                    _this.rootLevel.getRelPathByObj({block: item.block, tech: 'examples-set'}, 'examples-set'),
                                                     _this.level.getRelByObj(exampleitem));
 
                                                 return {

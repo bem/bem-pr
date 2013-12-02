@@ -25,7 +25,7 @@ block block {
 
     elem description {
 
-        mix: { block: 'static-text' }
+        mix: {block: 'static-text'}
 
     }
 
@@ -34,7 +34,7 @@ block block {
         tag: ''
 
         content: [
-            { elem: 'note', content: this.ctx.name },
+            {elem: 'note', content: this.ctx.name},
             this.ctx.content
         ]
 

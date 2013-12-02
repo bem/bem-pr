@@ -92,7 +92,7 @@ module.exports = function(registry) {
                         '-c', PATH.resolve(__dirname, '../jsdoc.conf.json'),
                         '-t', PATH.resolve(__dirname, '../node_modules/jsdoc-bem/templates/docjson')
                     ].concat(paths),
-                    { cwd: this.root }
+                    {cwd: this.root}
                 );
 
             var content = '',

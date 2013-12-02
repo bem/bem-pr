@@ -1,5 +1,5 @@
 ({
     mustDeps: [
-        { block: 'headline' }
+        {block: 'headline'}
     ]
 })

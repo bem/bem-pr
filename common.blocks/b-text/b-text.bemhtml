@@ -6,7 +6,7 @@ block b-text {
 
         default: applyCtx({
             block: 'headline',
-            mods: { level: this.elem.charAt(1) },
+            mods: {level: this.elem.charAt(1)},
             content: this.ctx.content
         })
 

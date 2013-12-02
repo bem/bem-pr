@@ -1,9 +1,6 @@
 this._start, !this.environ: {
-
     this.environ = {};
-
     apply();
-
 }
 
 
