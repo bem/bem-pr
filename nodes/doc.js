@@ -26,6 +26,9 @@ module.exports = function(registry) {
             this.path = o.level;
             this.item = o.item || o;
 
+            // delete elem/mod/val information from the item
+            // because nevertheless a documentation file relies within
+            // elem we create doc data within its block
             delete this.item.elem;
             delete this.item.mod;
             delete this.item.val;
@@ -204,10 +207,10 @@ module.exports = function(registry) {
 
             return json.then(function(json) {
                 json = JSON.parse(json);
-                return _this.getResource(_this.item)
+                return _this.getResource()
                     .spread(function(BEMJSON, BEMHTML) {
 
-                        json = BEMJSON.build({
+                        var bemjson = BEMJSON.build({
                             block: 'global',
                             pageTitle: _this.item.block,
                             data: json,
@@ -219,22 +222,27 @@ module.exports = function(registry) {
 
                         return U.writeFile(
                             PATH.join(_this.root, PATH.dirname(_this.path), _this.item.block) + '.html',
-                            BEMHTML.apply(json));
+                            BEMHTML.apply(bemjson));
 
                     });
             });
         },
 
-        getResource : function(item) {
+        /**
+         * Returns promise for array consisting of two items:
+         * object returned by getBemjson() and object returned by getBemhtml().
+         * @returns {Promise * Array}
+         */
+        getResource : function() {
 
             var prefix = this.level.getByObj({
                     block: this.sourceBundle
                 });
 
-            var bemjson = this.getBemjson(prefix),
-                bemhtml = this.getBemhtml(prefix);
-
-            return Q.all([bemjson, bemhtml]);
+            return Q.all([
+                this.getBemjson(prefix),
+                this.getBemhtml(prefix)
+            ]);
 
         },
 
@@ -307,8 +315,12 @@ module.exports = function(registry) {
                         return _this.sources.map(function(item) {
                             var content,
                                 itemLevel = createLevel(item.level);
+                            // item contains information about entity which applies to be documentation source
+                            // (md, wiki, title.txt, examples)
 
                             if (item.tech !== 'examples') {
+                                // for entities in desc.md, desc.wiki, title.txt techs
+                                // we read their files and parse them. title.txt content is returned as is.
                                 var path = itemLevel.getPathByObj(item, item.suffix.substring(1));
 
                                 content = U.readFile(path)
@@ -320,10 +332,11 @@ module.exports = function(registry) {
                                     });
                             } else {
 
-
+                                // each block example is being put into block the documentation page
                                 var exampleLevel = createLevel(itemLevel.getPathByObj(item, item.tech)),
                                     decl = exampleLevel.getItemsByIntrospection();
 
+                                // scan for title.txt within example to use its content as description
                                 content = Q.all(decl.filter(function(item) {
                                         return item.tech === 'title.txt'
                                     })
@@ -337,6 +350,8 @@ module.exports = function(registry) {
                                                     _this.rootLevel.getRelPathByObj({block: item.block, tech: 'examples-set'}, 'examples-set'),
                                                     _this.level.getRelByObj(exampleitem));
 
+                                                // content var will contain array of {url, title) objects with
+                                                // example link and description
                                                 return {
                                                     url: url,
                                                     title: exampleDesc
@@ -344,6 +359,47 @@ module.exports = function(registry) {
                                             });
                                     }));
                             }
+
+                            /**
+                             *  build an object tree describing block and its elems, mods, vals
+                             *
+                             * {
+                             *   name: 'block',
+                             *   mods: [
+                             *     {
+                             *       name: 'mod',
+                             *       vals: [
+                             *         {
+                             *           name: 'val1',
+                             *           title: [
+                             *             {
+                             *               level: 'common.blocks', // level the title.txt was found on
+                             *               content: 'content of the title.txt for this block.mod.val1'
+                             *             }
+                             *           ]
+                             *
+                             *         }
+                             *       ],
+                             *
+                             *       title: [
+                             *         {
+                             *           level: 'common.blocks',
+                             *           content: 'content of the title.txt for this block.mod'
+                             *         }
+                             *       ]
+                             *     }
+                             *   ],
+                             *
+                             *   description: [
+                             *     {
+                             *       level: 'desktop.blocks',
+                             *       content: {} // bemjson content of md or wiki file for this block
+                             *     }
+                             *   ]
+                             * }
+                             *
+                             * etc
+                             */
 
                             json.name = item.block;
                             var obj = json;
@@ -363,16 +419,9 @@ module.exports = function(registry) {
                             }
 
                             return content.then(function(content) {
-                                var key = item.tech;
-                                switch (item.tech) {
-                                    case 'title.txt':
-                                        key = 'title';
-                                        break;
-                                    case 'examples':
-                                        break;
-                                    default:
-                                        key = 'description';
-                                }
+                                var key = 'description';
+                                if (item.tech === 'title.txt') key = 'title'
+                                else if (item.tech === 'examples') key = 'examples';
 
                                 obj[key] = obj[key] || [];
                                 obj[key].push({
