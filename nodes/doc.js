@@ -143,38 +143,6 @@ module.exports = function(registry) {
          */
         getDocSourceNodeClass: function() {
             return 'DocSourceNode';
-        },
-
-        getTechs : function() {
-            return this.__base.apply(this, arguments);
-        },
-
-        getSourceNodePrefix : function() {
-            if(!this._sourceNodePrefix) {
-                this._sourceNodePrefix = this.__self.createNodePrefix({
-                    root  : this.root,
-                    level : this.source.level,
-                    item  : this.item
-                });
-            }
-
-            return this._sourceNodePrefix;
-        },
-
-        getLevels : function(tech) {
-            return this.__base.apply(this, arguments)
-                .concat(
-                    this.rootLevel
-                        .getTech('blocks')
-                        .getPath(this.getSourceNodePrefix())
-                );
-        },
-
-        createTechNode : function(tech, bundleNode, magicNode) {
-            if(tech === this.item.tech) {
-                return this.setSourceItemNode(tech, bundleNode, magicNode);
-            }
-            return this.__base.apply(this, arguments);
         }
 
     }, {
