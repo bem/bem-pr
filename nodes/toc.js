@@ -84,7 +84,7 @@ module.exports = function(registry) {
                             .filter(function(item) {
                                 return ~docTechs.indexOf(item.tech);
                             })
-                            .map(function(item) {
+                            .forEach(function(item) {
                                 blocks[item.block] = true;
                             });
 
