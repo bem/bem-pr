@@ -143,7 +143,7 @@ module.exports = function(registry) {
 
             return json.then(function(json) {
                 json = JSON.parse(json);
-                return _this.getResource(_this.item)
+                return _this.getResource()
                     .spread(function(BEMTREE, BEMHTML) {
 
                         try {
