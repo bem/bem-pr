@@ -99,29 +99,31 @@ module.exports = function(registry) {
 
                 return Q.when(base.call(this), function(level) {
                     var realLevel = arch.getChildren(level),
-                        decls = _t.scanSources();
+                        decls = [
+                            {
+                                block: 'index',
+                                tech: 'index',
+                                level: '',
+                                suffix: 'index'
+                            },
+
+                            {
+                                block: 'catalogue',
+                                tech: '_catalogue',
+                                level: '',
+                                suffix: '_catalogue'
+                            },
+
+                            {
+                                block: 'jscatalogue',
+                                tech: '_jscatalogue',
+                                level: '',
+                                suffix: '_jscatalogue'
+                            }
+                        ].concat(_t.scanSources());
 
 
-                    decls.unshift({
-                        block: 'jscatalogue',
-                        tech: '_jscatalogue',
-                        level: '',
-                        suffix: '_jscatalogue'
-                    });
 
-                    decls.unshift({
-                        block: 'catalogue',
-                        tech: '_catalogue',
-                        level: '',
-                        suffix: '_catalogue'
-                    });
-
-                    decls.unshift({
-                        block: 'index',
-                        tech: 'index',
-                        level: '',
-                        suffix: 'index'
-                    });
 
                     decls.forEach(function(item) {
                         // creating levels node for item (examples, tests, whatever)
