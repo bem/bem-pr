@@ -14,7 +14,9 @@
     "underscore": "~1.5.2",
     "q": "~0.9.7",
     "q-io": "~1.10.4",
-    "jsdoc-bem": "https://github.com/bem/bem-jsdoc3-plugin/archive/master.tar.gz"
+    "jsdoc": "~3.3.0",
+    "jsdoc-bem": "~0.1.0",
+    "bem": "~0.6.12"
   },
   "peerDependencies": {
     "bem": "0.6.x || 0.7.x"
