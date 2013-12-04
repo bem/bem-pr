@@ -114,12 +114,14 @@ module.exports = function(registry) {
 
         getLevels: function() {
             return [
-                PATH.resolve(this.root, 'libs/bem-bl/blocks-common'),
-                PATH.resolve(this.root, 'libs/bem-bl/blocks-desktop'),
-                PATH.resolve(__dirname, '../common.blocks'),
-                PATH.resolve(__dirname, '../site.blocks')
-            ];
-
+                '../libs/bem-bl/blocks-common',
+                '../libs/bem-bl/blocks-desktop',
+                '../common.blocks',
+                '../site.blocks'
+            ]
+            .map(function(path) {
+                return PATH.resolve(__dirname, path);
+            });
         }
     });
 }
