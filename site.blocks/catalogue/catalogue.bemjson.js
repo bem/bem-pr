@@ -28,6 +28,7 @@ function createBemjson(ctx, type) {
     obj.examples = ctx.examples || [];
 
     ctx.url && (obj.url = ctx.url);
+    ctx.jsdocUrl && (obj.jsdocUrl = ctx.jsdocUrl);
 
     var content = obj.content || (obj.content = []);
 

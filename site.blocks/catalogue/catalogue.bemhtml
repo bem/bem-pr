@@ -14,13 +14,27 @@ block catalogue {
 
     elem item-name, this.ctx.url {
 
-        default: applyCtx({
-            block: 'link',
-            mix: {block: this.block, elem: this.elem},
-            url: this.ctx.url,
-            content: this.ctx.content
-        })
+        default: {
+            var o = [{
+                    block: 'link',
+                    mix: {block: this.block, elem: this.elem},
+                    url: this.ctx.url,
+                    content: this.ctx.content
+                }];
 
+            if (this.ctx.jsdocUrl) {
+                o.push(
+                    ' ',
+                    {
+                        block: 'link',
+                        mix: {block: this.block, elem: this.elem},
+                        url: this.ctx.jsdocUrl,
+                        content: 'jsdoc'
+                    });
+            }
+
+            return applyCtx(o);
+        }
     }
 
 }
@@ -33,7 +47,7 @@ block block, this._isShowCase, default: {
         block: 'catalogue',
         elem: 'item',
         content: [
-            {elem: 'item-name', url: ctx.url, content: ctx.name},
+            {elem: 'item-name', url: ctx.url, jsdocUrl: ctx.jsdocUrl, content: ctx.name},
             {elelm: 'item-title', content: ctx.title}
         ]
     });

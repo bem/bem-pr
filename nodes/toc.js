@@ -69,7 +69,9 @@ module.exports = function(registry) {
 
             // get tech names which represent the documentation in some form (md, title.txt, etc)
             var docTechs = registry.getNodeClass('SetsLevelNode')
-                .getSourceItemsMap()['docs'];
+                .getSourceItemsMap()['docs'],
+                jsdocTechs = registry.getNodeClass('SetsLevelNode')
+                .getSourceItemsMap()['jsdoc'];
 
             return this.__base()
                 .then(function() {
@@ -81,11 +83,14 @@ module.exports = function(registry) {
                         level = createLevel(level);
 
                         level.getItemsByIntrospection()
-                            .filter(function(item) {
-                                return ~docTechs.indexOf(item.tech);
-                            })
                             .forEach(function(item) {
-                                blocks[item.block] = true;
+                                if (~docTechs.indexOf(item.tech)) {
+                                    (blocks[item.block] || (blocks[item.block] = {})).doc = true;
+                                }
+
+                                if (~jsdocTechs.indexOf(item.tech)) {
+                                    (blocks[item.block] || (blocks[item.block] = {})).jsdoc = true;
+                                }
                             });
 
                     });
@@ -94,11 +99,15 @@ module.exports = function(registry) {
                     var data = Object.keys(blocks)
                         .map(function(block) {
 
-                            return {
+                            var item = {
                                 name: block,
                                 url: '../' + block + '/' + block + '.html',
                                 title: block
                             };
+
+                            if (blocks[block].jsdoc) item.jsdocUrl = '../' + block + '/' + block + '.jsdoc.html';
+
+                            return item;
                         });
 
                     return U.writeFile(
