@@ -207,7 +207,7 @@ module.exports = function(registry) {
 
             return json.then(function(json) {
                 json = JSON.parse(json);
-                return _this.getResource()
+                return _this.getTemplates()
                     .spread(function(BEMJSON, BEMHTML) {
 
                         var bemjson = BEMJSON.build({
@@ -233,7 +233,7 @@ module.exports = function(registry) {
          * object returned by getBemjson() and object returned by getBemhtml().
          * @returns {Promise * Array}
          */
-        getResource : function() {
+        getTemplates: function() {
 
             var prefix = this.level.getByObj({
                     block: this.sourceBundle
@@ -276,7 +276,8 @@ module.exports = function(registry) {
     });
 
     /**
-     * The node generates data.json for the block's documentation. Input data dddddddd
+     * The node generates data.json for the block's documentation. Input data is passed via
+     * o.sources and consists of the items describing found documentation related files within the block.
      * @class DocSourceNode
      */
     registry.decl('DocSourceNode', 'GeneratedFileNode', {
@@ -293,22 +294,7 @@ module.exports = function(registry) {
 
         make: function() {
 
-            var getObj = function() {
-                    return {
-                        // JSON.stringify() will serialize object properties into array
-                        toJSON: function() {
-                            var _this = this;
-                            return Object.keys(this).sort()
-                                .filter(function(key) {
-                                    return typeof _this[key] !== 'function';
-                                })
-                                .map(function(key) {
-                                    return _this[key];
-                                });
-                        }
-                    }
-                },
-                _this = this,
+            var _this = this,
                 json = {},
                 content = this.scanExamples()
                     .then(function() {
@@ -331,33 +317,7 @@ module.exports = function(registry) {
                                         return c;
                                     });
                             } else {
-
-                                // each block example is being put into block the documentation page
-                                var exampleLevel = createLevel(itemLevel.getPathByObj(item, item.tech)),
-                                    decl = exampleLevel.getItemsByIntrospection();
-
-                                // scan for title.txt within example to use its content as description
-                                content = Q.all(decl.filter(function(item) {
-                                        return item.tech === 'title.txt'
-                                    })
-                                    .map(function(exampleitem) {
-
-                                        var examplePath = exampleLevel.getPathByObj(exampleitem, exampleitem.suffix.substring(1));
-
-                                        return U.readFile(examplePath)
-                                            .then(function(exampleDesc) {
-                                                var url = PATH.join(
-                                                    _this.rootLevel.getRelPathByObj({block: item.block, tech: 'examples-set'}, 'examples-set'),
-                                                    _this.level.getRelByObj(exampleitem));
-
-                                                // content var will contain array of {url, title) objects with
-                                                // example link and description
-                                                return {
-                                                    url: url,
-                                                    title: exampleDesc
-                                                };
-                                            });
-                                    }));
+                                content = _this._readExamples(item);
                             }
 
                             /**
@@ -400,23 +360,7 @@ module.exports = function(registry) {
                              *
                              * etc
                              */
-
-                            json.name = item.block;
-                            var obj = json;
-                            if (item.elem) {
-                                obj = obj.elems || (obj.elems = getObj());
-                                obj = obj[item.elem] || (obj[item.elem] = {name: item.elem});
-                            }
-
-                            if (item.mod) {
-                                obj = obj.mods || (obj.mods = getObj());
-                                obj = obj[item.mod] || (obj[item.mod] = {name: item.mod});
-                            }
-
-                            if (item.val) {
-                                obj = obj.vals || (obj.vals = getObj());
-                                obj = obj[item.val] || (obj[item.val] = {name: item.val});
-                            }
+                            var obj = _this._constructJson(json, item);
 
                             return content.then(function(content) {
                                 var key = 'description';
@@ -429,7 +373,6 @@ module.exports = function(registry) {
                                     content: content
                                 })
                             })
-
                         })
                     });
 
@@ -440,6 +383,75 @@ module.exports = function(registry) {
                 .then(function() {
                     return U.writeFile(_this.path, JSON.stringify(json, null, 2));
                 });
+        },
+
+        _readExamples: function(item) {
+
+            // each block example is being put into block the documentation page
+            var _this = this,
+                exampleLevel = createLevel(
+                    createLevel(item.level).getPathByObj(item, item.tech)
+                );
+
+            // scan for title.txt within example to use its content as description
+            return Q.all(exampleLevel.getItemsByIntrospection().filter(function(item) {
+                return item.tech === 'title.txt'
+            })
+            .map(function(exampleitem) {
+
+                var examplePath = exampleLevel.getPathByObj(exampleitem, exampleitem.suffix.substring(1));
+
+                return U.readFile(examplePath)
+                    .then(function(exampleDesc) {
+                        var url = PATH.join(
+                            _this.rootLevel.getRelPathByObj({block: item.block, tech: 'examples-set'}, 'examples-set'),
+                            _this.level.getRelByObj(exampleitem));
+
+                        // content var will contain array of {url, title) objects with
+                        // example link and description
+                        return {
+                            url: url,
+                            title: exampleDesc
+                        };
+                    });
+            }));
+        },
+
+        _constructJson: function(json, item) {
+            var getObj = function() {
+                    return {
+                        // JSON.stringify() will serialize object properties into array
+                        toJSON: function() {
+                            var _this = this;
+                            return Object.keys(this).sort()
+                                .filter(function(key) {
+                                    return typeof _this[key] !== 'function';
+                                })
+                                .map(function(key) {
+                                    return _this[key];
+                                });
+                        }
+                    }
+                };
+
+            json.name = item.block;
+            var obj = json;
+            if (item.elem) {
+                obj = obj.elems || (obj.elems = getObj());
+                obj = obj[item.elem] || (obj[item.elem] = {name: item.elem});
+            }
+
+            if (item.mod) {
+                obj = obj.mods || (obj.mods = getObj());
+                obj = obj[item.mod] || (obj[item.mod] = {name: item.mod});
+            }
+
+            if (item.val) {
+                obj = obj.vals || (obj.vals = getObj());
+                obj = obj[item.val] || (obj[item.val] = {name: item.val});
+            }
+
+            return obj;
         },
 
         /**
