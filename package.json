@@ -13,7 +13,9 @@
     "shmakowiki": "~0.4.0",
     "jsdoc": "~3.3.0",
     "jsdoc-bem": "~0.1.0",
-    "vow": "~0.3.12"
+    "vow": "~0.3.12",
+    "bemhtml-compat": "~0.0.4",
+    "bem-xjst": "~0.3.1"
   },
   "devDependencies": {
     "bem": "~0.6.12"
