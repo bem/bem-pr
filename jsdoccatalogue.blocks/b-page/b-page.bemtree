@@ -1,6 +1,6 @@
 block page, default: {
     return applyCtx({
-        block: 'page',
+        block: 'b-page',
         title: this.ctx.data.blockName, // TODO
         favicon: '/favicon.ico', // TODO
         head: [

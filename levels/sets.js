@@ -13,8 +13,7 @@ exports.getTechs = function() {
         'js': 'v2/js-i',
         'css': 'v2/css',
         'bem.json.js': PATH.resolve(__dirname, '../techs/bem.json.js'),
-        'bemhtml': PATH.resolve(this.projectRoot, 'libs/bem-bl/blocks-common/i-bem/bem/techs/v2/bemhtml.js'),
-        'bemtree': PATH.resolve(this.projectRoot, 'libs/bem-core/.bem/techs/bemtree.js'),
-        'bemhtmlcore': PATH.resolve(this.projectRoot, 'libs/bem-core/.bem/techs/bemhtml.js')
+        'bemhtml': PATH.resolve(__dirname, '../libs/bem-bl/blocks-common/i-bem/bem/techs/v2/bemhtml.js'),
+        'bemtree': PATH.resolve(__dirname, '../libs/bem-bl/blocks-common/i-bem/bem/techs/v2/bemtree.js')
     };
 };
