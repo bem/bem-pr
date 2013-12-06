@@ -157,7 +157,7 @@ module.exports = function(registry) {
             var suffix2class = {
                 'examples': 'ExamplesLevelNode',
                 'test.js': 'TestsLevelNode',
-                '.tests': 'TestsLevelNode',
+                'tests': 'TestsLevelNode',
                 'desc.md': 'DocLevelNode',
                 'desc.wiki': 'DocLevelNode',
                 'title.txt': 'DocLevelNode',
