@@ -70,8 +70,8 @@ module.exports = function(registry) {
 
             var _this = this;
 
-            return Q.all([U.mkdirp(PATH.dirname(this.path)), this.getSourceContent()])
-                .spread(function(mkdir, content) {
+            return Q.all([this.getSourceContent(), U.mkdirp(PATH.dirname(this.path))])
+                .spread(function(content) {
                     return U.writeFile(_this.path, content);
                 })
         },
@@ -143,7 +143,7 @@ module.exports = function(registry) {
 
             return json.then(function(json) {
                 json = JSON.parse(json);
-                return _this.getResource()
+                return _this.getTemplates()
                     .spread(function(BEMTREE, BEMHTML) {
 
                         try {
