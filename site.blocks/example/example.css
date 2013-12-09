@@ -1,0 +1,16 @@
+.example
+{
+    border-left: 2px solid #ddd;
+
+    margin: 15px 0 25px;
+    padding-left: 10px;
+}
+
+.example__live,
+.example__source
+{
+    border: 0;
+
+    width: 100%;
+    overflow-x: hidden;
+}

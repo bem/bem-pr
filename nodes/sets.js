@@ -8,7 +8,7 @@ var FS = require('fs'),
     PATH = require('path'),
     BEM = require('bem'),
     Q = require('q'),
-    _ = require('underscore'),
+    _ = require('lodash/dist/lodash.underscore'),
     LOGGER = BEM.logger,
 
     createLevel = BEM.createLevel,
@@ -62,10 +62,10 @@ module.exports = function(registry) {
 
                     var node = registry.getNodeClass('SetsLevelNode')
                         .create({
-                            root    : this.root,
-                            level   : this.rootLevel,
-                            item    : { block : name, tech : 'sets' },
-                            sources : sets[name]
+                            root: this.root,
+                            level: this.rootLevel,
+                            item: {block: name, tech: 'sets'},
+                            sources: sets[name]
                         });
 
                     this.arch.setNode(node);
@@ -99,50 +99,40 @@ module.exports = function(registry) {
 
                 return Q.when(base.call(this), function(level) {
                     var realLevel = arch.getChildren(level),
-                        getNodeClassForSuffix = _t.getNodeClsForSuffix.bind(_t),
-                        decls = _t.scanSources(),
-                        BlockNodeClass = registry.getNodeClass('BlockNode');
+                        decls = [
+                            {
+                                block: 'index',
+                                tech: 'index',
+                                level: '',
+                                suffix: 'index'
+                            },
+
+                            {
+                                block: 'catalogue',
+                                tech: '_catalogue',
+                                level: '',
+                                suffix: '_catalogue'
+                            },
+
+                            {
+                                block: 'jscatalogue',
+                                tech: '_jscatalogue',
+                                level: '',
+                                suffix: '_jscatalogue'
+                            }
+                        ].concat(_t.scanSources());
+
+
+
 
                     decls.forEach(function(item) {
-                        // creating block node (source) for item
-                        var o = {
-                                root  : this.root,
-                                item  : item,
-                                level : item.level
-                            },
-                            blockNode,
-                            blocknid = BlockNodeClass.createId(o);
-
-                        if(arch.hasNode(blocknid)) {
-                            blockNode = arch.getNode(blocknid);
-                        } else {
-                            blockNode = BlockNodeClass.create(o);
-                            arch.setNode(blockNode);
-                        }
-
                         // creating levels node for item (examples, tests, whatever)
-                        o = {
-                            root  : this.root,
-                            level : this.path,
-                            item  : this.getSetItem(item)
-                        };
+                        var levelNode = (_t['create-' + item.tech + '-node'] || _t['create-default-level-node']).call(_t, item, level, realLevel),
+                            source = createLevel(item.level).getPathByObj(item, item.suffix.substring(1));
 
-                        var LevelNodeCls = registry.getNodeClass(getNodeClassForSuffix(item.suffix)),
-                            levelnid = LevelNodeCls.createId(o),
-                            levelNode;
-
-                        if(arch.hasNode(levelnid)) {
-                            levelNode = arch.getNode(levelnid);
-                        } else {
-                            levelNode = LevelNodeCls.create(o);
-                            arch.setNode(levelNode, level, realLevel);
-                        }
-
-                        arch.addChildren(levelNode, blockNode);
-
-                        var source = blockNode.level.getPathByObj(item, item.tech);
                         if(FS.existsSync(source)) {
                             levelNode.sources.push(source);
+                            levelNode.sourceItems && levelNode.sourceItems.push(item);
                         }
                     }, _t);
 
@@ -153,28 +143,73 @@ module.exports = function(registry) {
 
         },
 
-        getSourceItemsMap : function() {
-            return {
-                examples : ['examples'],
-                tests : ['tests', 'test.js'],
-                docs : ['md', 'wiki']
-            };
-        },
-
         getSourceItemTechs : function() {
-            var map = this.getSourceItemsMap();
-            return _.uniq(Object.keys(map).reduce(function(techs, name) {
+            var map = this.__self.getSourceItemsMap();
+
+            var r = _.uniq(Object.keys(map).reduce(function(techs, name) {
                     return techs.concat(map[name]);
                 }, []));
+
+            return r;
         },
 
-        getNodeClsForSuffix : function(suffix) {
+        getNodeClsForTech : function(suffix) {
             var suffix2class = {
-                '.examples' : 'ExamplesLevelNode',
-                '.tests'    : 'TestsLevelNode',
-                '.test.js'  : 'TestsLevelNode'
+                'examples': 'ExamplesLevelNode',
+                'test.js': 'TestsLevelNode',
+                'tests': 'TestsLevelNode',
+                'desc.md': 'DocLevelNode',
+                'desc.wiki': 'DocLevelNode',
+                'title.txt': 'DocLevelNode',
+                'js'  : 'JsDocLevelNode',
+                '_catalogue': 'DocCatalogueNode',
+                '_jscatalogue': 'JsDocCatalogueNode',
+                'index': 'DocIndexNode'
             };
             return suffix2class[suffix];
+        },
+
+        'create-default-level-node': function(item, parents, children) {
+            var arch = this.ctx.arch,
+                o = {
+                    root  : this.root,
+                    level : this.path,
+                    item  : this.getSetItem(item),
+                    levels: this.sources
+                };
+
+            var LevelNodeCls = registry.getNodeClass(this.getNodeClsForTech(item.tech)),
+                levelId = LevelNodeCls.createId(o),
+                levelNode;
+
+            if(arch.hasNode(levelId)) {
+                levelNode = arch.getNode(levelId);
+            } else {
+                levelNode = LevelNodeCls.create(o);
+                arch.setNode(levelNode, parents, children);
+            }
+
+            return levelNode;
+        },
+
+        'create-desc.md-node': function(item, parents, children) {
+            var level = this['create-default-level-node'].apply(this, arguments);
+
+            this.ctx.arch.addChildren(
+                level,
+                PATH.join(this.level.getRelPathByObj(this.item, this.item.tech), 'catalogue.doc*'));
+
+            return level;
+        },
+
+        'create-js-node': function(item, parents, children) {
+            var level = this['create-default-level-node'].apply(this, arguments);
+
+            this.ctx.arch.addChildren(
+                level,
+                PATH.join(this.level.getRelPathByObj(this.item, this.item.tech), 'jscatalogue.jsdoc*'));
+
+            return level;
         },
 
         getSetItem: function(item) {
@@ -191,6 +226,16 @@ module.exports = function(registry) {
             return sourceToSet[sourceTech];
         }
 
+    }, {
+
+        getSourceItemsMap : function() {
+            return {
+                examples : ['examples'],
+                tests : ['tests', 'test.js'],
+                docs : ['desc.md', 'title.txt', 'desc.wiki'],
+                jsdoc: ['js']
+            };
+        }
     });
 
 };

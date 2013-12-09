@@ -32,7 +32,7 @@ exports.techMixin = {
                 bemhtmlDecl.parse(depsByTechsJs.bemhtml || []);
                 bemhtmlDecl.parse(depsByTechsTestJs.bemhtml || []);
 
-                bemhtmlDecl = { deps: (bemhtmlDecl.serialize()['bemhtml'] || {})['bemhtml'] || [] };
+                bemhtmlDecl = {deps: (bemhtmlDecl.serialize()['bemhtml'] || {})['bemhtml'] || []};
 
                 var bemhtmlResults = bemhtmlDecl.deps.length ?
                     _this.getTechBuildResults('bemhtml', bemhtmlDecl, context, output, opts) :
