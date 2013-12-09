@@ -27,7 +27,7 @@ module.exports = function(registry) {
 
         getSourceContent: function() {
             return 'exports.blocks = ' + JSON.stringify([
-                {'block': 'page'}
+                {'block': 'b-page'}
             ]) + ';'
         }
 
@@ -46,21 +46,19 @@ module.exports = function(registry) {
                 'css',
                 'js',
                 'bemtree',
-                'bemhtmlcore'
+                'bemhtml'
             ]
         },
 
         getLevels: function() {
             return [
-                PATH.resolve(this.root, 'libs/bem-core/common.blocks'),
-                PATH.resolve(this.root, 'libs/bem-core/desktop.blocks'),
-                PATH.resolve(__dirname, '../jsdoccatalogue.blocks')
-            ];
-
-        },
-
-        'create-bemhtmlcore-optimizer-node': function(tech, sourceNode, bundleNode) {
-            return this['create-js-optimizer-node'].apply(this, arguments);
+                '../libs/bem-bl/blocks-common',
+                '../libs/bem-bl/blocks-desktop',
+                '../jsdoccatalogue.blocks'
+            ]
+            .map(function(path) {
+                return PATH.resolve(__dirname, path);
+            });
         }
     });
 }
