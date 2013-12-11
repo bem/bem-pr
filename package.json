@@ -18,7 +18,8 @@
     "bem-xjst": "~0.3.1",
     "lodash": "~2.4.1",
     "q": "~0.9.7",
-    "q-io": "~1.10.6"
+    "q-io": "~1.10.6",
+    "bem-environ": "~1.4.0"
   },
   "devDependencies": {
     "bem": "~0.7.2"

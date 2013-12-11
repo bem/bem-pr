@@ -4,6 +4,7 @@ block jsdoc {
 
     content: {
         var data = this._data;
+
         return applyCtx([
             {
                 elem: 'block-name',
@@ -13,6 +14,8 @@ block jsdoc {
                 elem: 'description',
                 content: data.description
             },
+            {elem: 'toc', _data: data}
+            {elem: 'methods', _data: methods}
             data.staticMembers && {
                 elem: 'members',
                 elemMods: {type: 'static'}
@@ -52,7 +55,6 @@ block jsdoc {
         ];
 
     }
-
 
     elem methods, content: {
         var type = this.ctx.elemMods.type,
@@ -100,12 +102,10 @@ block jsdoc {
                                     content: method.description
                                 },
                                 method.params && method.params.length ?
-                                    method.params.map(function(param) {
-                                        return {
-                                            elem: 'param',
-                                            data: param
-                                        }
-                                    }) : '',
+                                    {
+                                        elem: 'method-params',
+                                        _data: method.params
+                                    } : '',
                                 method.returns && method.returns.length ?
                                     method.returns.map(function(returns) {
                                         return {
@@ -126,6 +126,19 @@ block jsdoc {
             })
         ];
 
+    }
+
+    elem method-params, content: {
+        return this.ctx._data.map(function(param) {
+            return {
+                elem: 'param',
+                content: [
+                    {elem: 'param-name', content: param.name},
+                    {elem: 'param-type', content: param.types.join(', ')},
+                    {elem: 'param-desc', content: param.description}
+                ]
+            };
+        });
     }
 
     elem properties, content: {
@@ -233,27 +246,27 @@ block jsdoc {
         })
     ]
 
-    elem param, content: {
-        var param = this.ctx.data;
+    //elem param, content: {
+        //var param = this.ctx.data;
 
-        return [
-            {
-                elem: 'param-name',
-                content: (param.optional ? '[' : '') + param.name + (param.optional ? ']' : '')
-            },
-            {
-                elem: 'param-description',
-                content: param.description
-            },
-            param.types && param.types.length ? {
-                elem: 'param-types',
-                content: param.types.join(', ')
-            } : '',
-            param.default && {
-                elem: 'param-default',
-                content: 'Default: ' + param.default
-            }
-        ]
-    }
+        //return [
+            //{
+                //elem: 'param-name',
+                //content: (param.optional ? '[' : '') + param.name + (param.optional ? ']' : '')
+            //},
+            //{
+                //elem: 'param-description',
+                //content: param.description
+            //},
+            //param.types && param.types.length ? {
+                //elem: 'param-types',
+                //content: param.types.join(', ')
+            //} : '',
+            //param.default && {
+                //elem: 'param-default',
+                //content: 'Default: ' + param.default
+            //}
+        //]
+    //}
 
 }

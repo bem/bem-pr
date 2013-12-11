@@ -1,3 +1,13 @@
 block jsdoc {
     elem block-name, tag: 'h1'
+
+    elem method-params, tag: 'table'
+
+    elem param, tag: 'tr'
+
+    elem param-name, tag: 'td'
+
+    elem param-type, tag: 'td'
+
+    elem param-desc, tag: 'td'
 }
