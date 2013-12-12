@@ -4,176 +4,162 @@ block jsdoc {
 
     content: {
         var data = this._data;
-
         return applyCtx([
             {
                 elem: 'block-name',
-                content: data.blockName
+                content: 'Блок ' + data.blockName
             },
-            data.description && {
-                elem: 'description',
-                content: data.description
-            },
-            {elem: 'toc', _data: data}
-            {elem: 'methods', _data: methods}
-            data.staticMembers && {
-                elem: 'members',
-                elemMods: {type: 'static'}
-            },
-            data.instanceMembers && {
-                elem: 'members',
-                elemMods: {type: 'instance'}
-            },
-            data.mods && data.mods.length? {elem: 'mods'} : '',
-            data.events && data.events.length? {elem: 'events'} : ''
+
+            {elem: 'bem-block', _data: data},
+            data.mods.map(function(mod) {
+                return {elem: 'bem-mod', _data: mod};
+            })
         ]);
     }
 
-    elem members, content: {
-        var type = this.ctx.elemMods.type,
-            modIdx = this.ctx.modIdx,
-            isModMember = modIdx !== undefined,
-            data = isModMember ? this._data.mods[modIdx] : this._data,
-            members = data[type + 'Members'];
-
+    elem bem-block, content: {
+        var data = this._data;
         return [
             {
                 block: 'heading',
-                mods: {level: isModMember? 3: 2},
-                content: type + ' members'
+                mods: {level: 2},
+                content: 'Описание'
             },
-            members.methods && {
-                elem: 'methods',
-                elemMods: {type: type},
-                modIdx: modIdx
+            {
+                elem: 'description',
+                content: data.description
             },
-            members.properties && members.properties.length? {
-                elem: 'properties',
-                elemMods: {type: type},
-                modIdx: modIdx
-            } : ''
-        ];
+            data.jsParams.length > 0
+                ? {elem: 'js-params', _data: data.jsParams}
+                : '',
 
+            data.methods.length > 0
+                ? {elem: 'methods', _data: data.methods}
+                : '',
+            data.properties.length > 0
+                ? {elem: 'properties', _data: data.properties}
+                : '',
+
+            data.events.length > 0
+                ? {elem: 'events', _data: data.events}
+                : ''
+        ];
+    }
+
+    elem bem-mod, content: {
+        var data = this.ctx._data;
+        return [
+            {
+                elem: 'mod-name',
+                content: 'Модификатор _' + data.name + '_' + data.value
+            },
+            {
+                elem: 'description',
+                content: data.description
+            },
+            data.methods.length > 0
+                ? {elem: 'methods', _data: data.methods}
+                : '',
+            data.properties.length > 0
+                ? {elem: 'properties', _data: data.properties}
+                : '',
+
+            data.events.length > 0
+                ? {elem: 'events', _data: data.events}
+                : ''
+        ]
+    }
+
+    elem js-params, content: {
+        return [
+            {
+                block: 'heading',
+                mods: { level: 3 },
+                content: 'JS-параметры'
+            },
+            {
+                elem: 'params-section',
+                _data: this.ctx._data
+            }
+        ];
     }
 
     elem methods, content: {
-        var type = this.ctx.elemMods.type,
-            modIdx = this.ctx.modIdx,
-            isModMember = modIdx !== undefined,
-            data = isModMember ? this._data.mods[modIdx] : this._data,
-            methods = data[type + 'Members'].methods;
+        var data = this.ctx._data;
 
         return [
             {
                 block: 'heading',
-                mods: { level: isModMember ? 4 : 3 },
-                content: 'Methods'
+                mods: { level: 3 },
+                content: 'Методы'
             },
-            Object.keys(methods)
-                .filter(function(methodType) {
-                    return methods[methodType].length;
-                })
-                .map(function(methodType) {
-                return [
-                    {
-                        block: 'heading',
-                        mods: { level: isModMember ? 5 : 4 },
-                        content: methodType
-                    },
-                    methods[methodType].map(function(method) {
-                        return {
-                            elem: 'method',
-                            elemMods: { type: methodType },
-                            content: [
-                                method.deprecated && {
-                                    elem: 'deprecated',
-                                    content: 'Deprecated ' + method.deprecated
-                                },
-                                method.final && {
-                                    elem: 'final',
-                                    content: 'final'
-                                },
-                                {
-                                    elem: 'method-name',
-                                    content: method.name
-                                },
-                                {
-                                    elem: 'method-description',
-                                    content: method.description
-                                },
-                                method.params && method.params.length ?
-                                    {
-                                        elem: 'method-params',
-                                        _data: method.params
-                                    } : '',
-                                method.returns && method.returns.length ?
-                                    method.returns.map(function(returns) {
-                                        return {
-                                            elem: 'returns',
-                                            content: [
-                                                {
-                                                    elem: 'returns-description',
-                                                    content: returns.description
-                                                },
-                                                returns.types.join(', ')
-                                            ]
-                                        }
-                                    }) : ''
-                            ]
-                        };
-                    })
-                ];
-            })
-        ];
 
-    }
-
-    elem method-params, content: {
-        return this.ctx._data.map(function(param) {
-            return {
-                elem: 'param',
-                content: [
-                    {elem: 'param-name', content: param.name},
-                    {elem: 'param-type', content: param.types.join(', ')},
-                    {elem: 'param-desc', content: param.description}
-                ]
-            };
-        });
-    }
-
-    elem properties, content: {
-        var type = this.ctx.elemMods.type,
-            modIdx = this.ctx.modIdx,
-            isModMember = modIdx !== undefined,
-            data = isModMember ? this._data.mods[modIdx] : this._data,
-            properties = data[type + 'Members'].properties;
-
-        return [
-            {
-                block: 'heading',
-                mods: { level: isModMember ? 3 : 4 },
-                content: 'Properties'
-            },
-            properties.map(function(property) {
+   
+            data.map(function(method) {
                 return {
-                    elem: 'property',
+                    elem: 'method',
                     content: [
-                        property.deprecated && {
+
+
+                        {
+                            elem: 'method-name',
+                            content: method.name
+                        },
+
+                        method.scope === 'static' && {
+                            elem: 'static',
+                            content: 'STATIC'
+                        },
+
+                        method.access === 'protected' && {
+                            elem: 'protected',
+                            content: 'PROTECTED'
+                        },
+
+                        method.final && {
+                            elem: 'final',
+                            content: 'FINAL'
+                        },
+
+                        method.deprecated && {
                             elem: 'deprecated',
-                            content: 'Deprecated ' + property.deprecated
+                            content: 'Deprecated: ' + method.deprecated
+                        },
+
+                        {
+                            elem: 'method-description',
+                            content: method.description
                         },
                         {
-                            elem: 'property-name',
-                            content: property.name
+                            block: 'heading',
+                            mods: {level: 5},
+                            content: 'Параметры'
                         },
+                        method.params && method.params.length ?
+                            {
+                                elem: 'params-section',
+                                _data: method.params
+                            } : '',
+
                         {
-                            elem: 'property-description',
-                            content: property.description
+                            block: 'heading',
+                            mods: {level: 5},
+                            content: 'Возвращаемое значение'
                         },
-                        property.types && property.types.length ? {
-                            elem: 'property-types',
-                            content: 'Types: ' + property.types.join(', ')
-                        } : ''
+
+                        method.returns && method.returns.length ?
+                            method.returns.map(function(returns) {
+                                return {
+                                    elem: 'returns',
+                                    content: [
+                                        returns.types.join(', '),
+                                        {
+                                            elem: 'returns-description',
+                                            content: returns.description
+                                        }
+                                    ]
+                                }
+                            }) : ''
                     ]
                 };
             })
@@ -181,92 +167,88 @@ block jsdoc {
 
     }
 
-    elem mods, content: [
-        {
-            block: 'heading',
-            mods: { level: 2 },
-            content: 'Modifiers'
-        },
-        this._data.mods.map(function(mod, idx) {
+    elem params-section, content: {
+        return this.ctx._data.map(function(param) {
             return {
-                elem: 'mod',
+                elem: 'param',
                 content: [
-                    {
-                        elem: 'mod-name',
-                        content: mod.name
-                    },
-                    {
-                        elem: 'mod-value',
-                        content: mod.value
-                    },
-                    {
-                        elem: 'mod-description',
-                        content: mod.description
-                    },
-                    mod.staticMembers && {
-                        elem: 'members',
-                        elemMods: { type: 'static' },
-                        modIdx: idx
-                    },
-                    mod.instanceMembers && {
-                        elem: 'members',
-                        elemMods: { type: 'instance' },
-                        modIdx: idx
-                    }
+                    {elem: 'param-name', content: param.name},
+                    {elem: 'param-type', content: param.types.join(' | ')},
+                    {elem: 'param-desc', content: param.description}
                 ]
             };
-        })
-    ]
+        });
+    }
+
+    elem properties, content: {
+        return [
+            {
+                block: 'heading',
+                mods: {level: 3},
+                content: 'Свойства'
+            },
+
+            this.ctx._data.map(function(prop) {
+                return {
+                    elem: 'property',
+                    content: [
+                        {
+                            elem: 'prop-name',
+                            content: prop.name
+                        },
+
+                        prop.scope === 'static' && {
+                            elem: 'static',
+                            content: 'STATIC'
+                        },
+
+                        prop.access === 'protected' && {
+                            elem: 'protected',
+                            content: 'PROTECTED'
+                        },
+
+
+                        prop.types && prop.types.length 
+                            ? {elem: 'prop-type', content: 'Типы: ' + prop.types.join(' | ')}
+                            : '',
+
+                        prop.deprecated && {
+                            elem: 'deprecated',
+                            content: 'Deprecated: ' + method.deprecated
+                        },
+    
+                        {
+                            elem: 'prop-desc',
+                            content: prop.description
+                        }
+                    ]
+                };
+            })
+        ];
+    }
 
     elem events, content: [
         {
             block: 'heading',
-            mods: { level: 2 },
-            content: 'Events'
+            mods: {level: 3},
+            content: 'События'
         },
-        this._data.events.map(function(event) {
-            return {
-                elem: 'event',
-                content: [
-                    {
-                        elem: 'event-name',
-                        content: event.name
-                    },
-                    {
-                        elem: 'event-params',
-                        content: event.params.map(function(param) {
-                            return {
-                                elem: 'param',
-                                data: param
-                            }
-                        })
-                    }
-                ]
-            };
+
+        this.ctx._data.map(function(event) {
+            return [
+                {elem: 'event-name', content: event.name},
+                {elem: 'event-desc', content: event.description},
+                {
+                    block: 'heading',
+                    mods: {level: 4},
+                    content: 'Параметры'
+                },
+
+                event.params && event.params.length
+                    ? {elem: 'params-section', _data: event.params}
+                    : ''
+            ]
+
         })
     ]
-
-    //elem param, content: {
-        //var param = this.ctx.data;
-
-        //return [
-            //{
-                //elem: 'param-name',
-                //content: (param.optional ? '[' : '') + param.name + (param.optional ? ']' : '')
-            //},
-            //{
-                //elem: 'param-description',
-                //content: param.description
-            //},
-            //param.types && param.types.length ? {
-                //elem: 'param-types',
-                //content: param.types.join(', ')
-            //} : '',
-            //param.default && {
-                //elem: 'param-default',
-                //content: 'Default: ' + param.default
-            //}
-        //]
-    //}
-
 }

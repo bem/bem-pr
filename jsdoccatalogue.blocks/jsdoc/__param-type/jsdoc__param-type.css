@@ -1,4 +1,8 @@
 .jsdoc__param-type
 {
-    border: 1px solid black;
+}
+
+.jsdoc__param-type::before
+{
+    content: ": ";
 }
