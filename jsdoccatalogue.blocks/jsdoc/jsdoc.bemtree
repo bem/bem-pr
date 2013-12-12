@@ -130,42 +130,57 @@ block jsdoc {
                             elem: 'method-description',
                             content: method.description
                         },
-                        {
-                            block: 'heading',
-                            mods: {level: 5},
-                            content: 'Параметры'
-                        },
                         method.params && method.params.length ?
                             {
-                                elem: 'params-section',
+                                elem: 'method-params',
                                 _data: method.params
                             } : '',
 
-                        {
-                            block: 'heading',
-                            mods: {level: 5},
-                            content: 'Возвращаемое значение'
-                        },
-
                         method.returns && method.returns.length ?
-                            method.returns.map(function(returns) {
-                                return {
-                                    elem: 'returns',
-                                    content: [
-                                        returns.types.join(', '),
-                                        {
-                                            elem: 'returns-description',
-                                            content: returns.description
-                                        }
-                                    ]
-                                }
-                            }) : ''
+                            {
+                                elem: 'method-returns',
+                                _data: method.returns
+                            } : ''
                     ]
                 };
             })
         ];
 
     }
+
+    elem method-params, content: [
+        {
+            block: 'heading',
+            mods: {level: 5},
+            content: 'Параметры'
+        },
+        {
+            elem: 'params-section',
+            _data: this.ctx._data
+        }
+    ]
+
+    elem method-returns, content: [
+        {
+            block: 'heading',
+            mods: {level: 5},
+            content: 'Возвращаемое значение'
+        },
+
+        this.ctx._data.map(function(returns) {
+            return {
+                elem: 'returns',
+                content: [
+                    returns.types.join(', '),
+                    {
+                        elem: 'returns-description',
+                        content: returns.description
+                    }
+                ]
+            }
+        })
+
+    ]
 
     elem params-section, content: {
         return this.ctx._data.map(function(param) {
@@ -238,14 +253,17 @@ block jsdoc {
             return [
                 {elem: 'event-name', content: event.name},
                 {elem: 'event-desc', content: event.description},
-                {
-                    block: 'heading',
-                    mods: {level: 4},
-                    content: 'Параметры'
-                },
+ 
 
                 event.params && event.params.length
-                    ? {elem: 'params-section', _data: event.params}
+                    ? [
+                        {
+                            block: 'heading',
+                            mods: {level: 5},
+                            content: 'Параметры'
+                        },
+                        {elem: 'params-section', _data: event.params}
+                      ]
                     : ''
             ]
 
