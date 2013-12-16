@@ -1,8 +1,0 @@
-.jsdoc__param-type
-{
-}
-
-.jsdoc__param-type::before
-{
-    content: ": ";
-}

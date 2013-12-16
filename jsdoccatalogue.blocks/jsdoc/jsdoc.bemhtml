@@ -1,5 +1,5 @@
 block jsdoc {
-    mix: [{ block: 'b-text', mods: {type: 'global'}} ]
+    mix: { block: 'b-text', mods: {type: 'global'}}
     elem block-name, tag: 'h1'
     elem mod-name, tag: 'h2'
 
