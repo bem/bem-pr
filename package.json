@@ -12,13 +12,14 @@
     "marked": "~0.2.5",
     "shmakowiki": "~0.4.0",
     "jsdoc": "~3.3.0",
-    "jsdoc-bem": "~0.1.0",
+    "jsdoc-bem": "~0.2.0",
     "vow": "~0.3.12",
     "bemhtml-compat": "~0.0.4",
     "bem-xjst": "~0.3.1",
     "lodash": "~2.4.1",
     "q": "~0.9.7",
-    "q-io": "~1.10.6"
+    "q-io": "~1.10.6",
+    "bem-environ": "~1.4.0"
   },
   "devDependencies": {
     "bem": "~0.7.2"

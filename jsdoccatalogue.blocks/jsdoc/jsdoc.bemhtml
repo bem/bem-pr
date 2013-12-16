@@ -1,3 +1,21 @@
 block jsdoc {
+    mix: { block: 'b-text', mods: {type: 'global'}}
     elem block-name, tag: 'h1'
+    elem mod-name, tag: 'h2'
+
+    elem method-name, tag: 'h4'
+
+    elem prop-name, tag: 'h4'
+
+    elem event-name, tag: 'h4'
+
+    elem params-section, tag: 'ul'
+
+    elem param, tag: 'li'
+
+    elem param-name, tag: 'code'
+
+    elem param-type, tag: 'code'
+
+    elem param-desc, tag: 'span'
 }

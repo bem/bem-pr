@@ -156,8 +156,8 @@ module.exports = function(registry) {
         getNodeClsForTech : function(suffix) {
             var suffix2class = {
                 'examples': 'ExamplesLevelNode',
-                'test.js': 'TestsLevelNode',
-                'tests': 'TestsLevelNode',
+                //'test.js': 'TestsLevelNode',
+                //'tests': 'TestsLevelNode',
                 'desc.md': 'DocLevelNode',
                 'desc.wiki': 'DocLevelNode',
                 'title.txt': 'DocLevelNode',
