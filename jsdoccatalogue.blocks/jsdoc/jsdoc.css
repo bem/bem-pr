@@ -1,4 +1,137 @@
+p
+{
+    padding: 0 30px;
+    color: #535353;
+}
+
+ul
+{
+    padding: 0 50px;
+}
+
+ul li
+{
+    list-style-type: none;
+}
+
+h2
+{
+    color: #eee;
+}
+
+h4
+{
+    color: #707070;
+    display: inline-block;
+    padding: 5px 15px;
+    margin: 10px 5px 0 30px;
+    border: 1px solid #DADADA;
+    border-radius: 5px;
+}
+
+h5
+{
+    color: #9C9C9C;
+
+    margin-left: 30px;
+}
+
+code
+{
+    background: #EEE;
+    color: rgb(0, 139, 165);
+    font-size: 13px;
+    padding: 0 5px;
+    margin: 2px;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+}
+
+.jsdoc
+{
+    font-family: 'Open Sans';
+}
+
 .jsdoc__deprecated
 {
     color: #f00;
+}
+
+.lang-javascript
+{
+    margin: 10px 30px !important;
+}
+
+.jsdoc__block-name
+{
+    background: #E6E6E6;
+    color: #616161;
+    font-size: 20px;
+    margin: 0;
+    padding: 10px;
+    padding-left: 20px;
+}
+
+.jsdoc__block-name:before
+{
+    background: #999;
+    width: 7px;
+    height: 7px;
+    display: inline-block;
+    position: relative;
+    top: -3px;
+    left: -10px;
+    content: '';
+}
+
+.jsdoc__description
+{
+    font-size: 13px;
+}
+
+.heading_level_2,
+.jsdoc__bem-mod .jsdoc__mod-name
+{
+    background: #eee;
+    color: #7E7D7D;
+    font-size: 16px;
+    margin: 0;
+    padding: 10px;
+    border-top: 1px solid #D5D5D5;
+}
+
+.heading_level_3
+{
+    background: #eee;
+    color: #7E7D7D;
+    font-size: 14px;
+    margin: 0;
+    padding: 5px;
+    padding-left: 10px;
+    border-bottom: 1px solid #D5D5D5;
+    border-top: 1px solid #D5D5D5;
+}
+
+.jsdoc__returns
+{
+    padding: 0 50px 15px 50px;
+}
+
+.jsdoc__js-params > ul
+{
+    padding: 5px 30px;
+}
+
+.jsdoc__protected,
+.jsdoc__static
+{
+    display: inline-block;
+    color: #707070;
+    font-style: italic;
+    font-size: 12px;
+}
+
+.jsdoc__bem-mod p
+{
+    padding-left: 50px;
 }
