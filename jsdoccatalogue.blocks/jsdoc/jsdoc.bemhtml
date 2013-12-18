@@ -1,12 +1,31 @@
 block jsdoc {
     elem block-name, tag: 'h1'
-    elem mod-name, tag: 'h2'
 
-    elem method-name, tag: 'h4'
+    elem toc, tag: 'ul'
 
-    elem prop-name, tag: 'h4'
+    elem toc-item, default: {
+        return apply(
+            this._mode = '',
+            this.ctx = {
+                tag: 'li',
+                content: [
+                    {
+                        tag: 'a',
+                        attrs: {
+                            href: this.ctx.link
+                        },
+                        content: this.ctx.title
+                    },
 
-    elem event-name, tag: 'h4'
+                    this.ctx.content? {
+                        tag: 'ul',
+                        content: this.ctx.content
+                    } : ''
+                ]
+            }
+        );
+       
+    }
 
     elem params-section, tag: 'ul'
 
