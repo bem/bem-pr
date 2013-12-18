@@ -54,6 +54,7 @@ module.exports = function(registry) {
             return [
                 '../libs/bem-bl/blocks-common',
                 '../libs/bem-bl/blocks-desktop',
+                '../common.blocks',
                 '../jsdoccatalogue.blocks'
             ]
             .map(function(path) {

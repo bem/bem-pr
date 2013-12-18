@@ -5,4 +5,4 @@
     shouldDeps: [
         {elem: 'assets'}
     ]
-})
+});

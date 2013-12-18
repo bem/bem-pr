@@ -2,8 +2,20 @@ block block {
 
     content: [
         {
-            elem: 'name',
-            content: this.ctx.name
+            block: 'header',
+            content: [
+                {
+                    block: 'link',
+                    mods: {pos: 'right'},
+                    url: '../index/index.html',
+                    content: '← каталог'
+                },
+                {
+                    elem: 'block-name',
+                    tag: 'span',
+                    content: 'Блок ' + this.ctx.name
+                }
+            ]
         },
         {
             elem: 'title',
