@@ -55,15 +55,15 @@ BEM.JSON.decl('catalogue', {
            root = '../index/index.html',
            json = [];
 
-       typ === 'showcase' || json.push({
-               block: 'menu',
-               mix: {block: 'catalogue', elem: 'navigation'},
-               content: {
-                   elem: 'item',
-                   url: root,
-                   content: '← каталог'
-               }
-           });
+       // typ === 'showcase' || json.push({
+       //         block: 'menu',
+       //         mix: {block: 'catalogue', elem: 'navigation'},
+       //         content: {
+       //             elem: 'item',
+       //             url: root,
+       //             content: '← каталог'
+       //         }
+       //     });
 
        json.push(createBemjson(ctx.tParam('decls')));
 

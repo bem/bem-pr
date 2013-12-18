@@ -6,10 +6,21 @@ block jsdoc {
         var data = this._data;
         return applyCtx([
             {
-                elem: 'block-name',
-                content: 'Блок ' + data.blockName
+                block: 'header',
+                content: [
+                    {
+                        block: 'link',
+                        mods: {pos: 'right'},
+                        url: '../index/index.html',
+                        content: '← каталог'
+                    },
+                    {
+                        elem: 'block-name',
+                        tag: 'span',
+                        content: 'Блок ' + data.blockName
+                    }
+                ]
             },
-
             {elem: 'toc', _data: data},
 
             {elem: 'bem-block', _data: data},

@@ -50,8 +50,6 @@ code
 .jsdoc
 {
     font-family: 'Open Sans';
-    position: relative;
-    top: 45px;
     padding-bottom: 10px;
 }
 
@@ -65,20 +63,18 @@ code
     margin: 10px 30px !important;
 }
 
-.jsdoc__block-name
+.header
 {
     background: #E6E6E6;
     color: #616161;
     font-size: 20px;
     margin: 0;
     padding: 10px 10px 10px 20px;
-    width: 100%;
-    position: fixed;
     border-bottom: 1px solid #B3B1B1;
     box-shadow: 0 1px 4px #D3D3D3;
 }
 
-.jsdoc__block-name:before
+.header:before
 {
     background: #999;
     width: 7px;
@@ -141,4 +137,29 @@ code
 .jsdoc__bem-mod p
 {
     padding-left: 50px;
+}
+
+.jsdoc__toc ul
+{
+    padding: 5px;
+    margin-left: 10px;
+}
+
+.jsdoc__toc li
+{
+    padding: 5px;
+}
+
+.jsdoc__toc a
+{
+    background: #fafafa;
+    padding: 3px 5px;
+    color: #444;
+    text-decoration: none;
+    border: 1px solid #eee;
+}
+
+.jsdoc__toc a:hover
+{
+    background: #fff;
 }

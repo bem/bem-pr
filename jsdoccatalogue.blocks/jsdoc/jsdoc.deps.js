@@ -1,5 +1,9 @@
 ({
     shouldDeps: [
-        {block: 'heading'}
+        {block: 'heading'},
+        {
+            block: 'link',
+            mods: {pos: 'right'}
+        }
     ]
-})
+});
