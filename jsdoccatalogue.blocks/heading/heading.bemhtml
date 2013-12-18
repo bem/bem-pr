@@ -1,3 +1,13 @@
 block heading, tag: 'h2'
 
 block heading, this.ctx.mods && this.ctx.mods.level, tag: 'h' + this.ctx.mods.level
+
+block heading, this.ctx.anchor, default: {
+    return applyCtx({
+        tag: 'a',
+        attrs: {
+            name: this.ctx.anchor
+        },
+        content: this.ctx
+    });
+}

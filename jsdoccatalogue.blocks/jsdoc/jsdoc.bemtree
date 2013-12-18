@@ -10,19 +10,121 @@ block jsdoc {
                 content: 'Блок ' + data.blockName
             },
 
+            {elem: 'toc', _data: data},
+
             {elem: 'bem-block', _data: data},
             data.mods.map(function(mod) {
-                return {elem: 'bem-mod', _data: mod};
+                return {elem: 'bem-mod', _data: mod, _blockName: data.blockName};
             })
         ]);
-    }
+    },
+
+    elem toc, content: {
+        var data = this.ctx._data;
+        return [
+            {elem: 'toc-block', _data: data},
+            data.mods.map(function(mod) {
+                return {elem: 'toc-mod', _data: mod, _blockName: data.blockName};
+            })
+        ];
+    },
+
+    elem toc-block, default: {
+        var data = this.ctx._data,
+            prefix = '#' + data.blockName + '-';
+
+        return applyCtx({
+            elem: 'toc-item',
+            link: prefix + 'desc',
+            title: 'Описание',
+            content: [
+                data.jsParams.length > 0
+                    ? {elem: 'toc-item', link: prefix + 'jsparams', title: 'JS-параметры'}
+                    : '',
+
+                data.methods.length > 0
+                    ? {elem: 'toc-methods', _data: data.methods, _prefix: prefix}
+                    : '',
+
+                data.properties.length > 0
+                    ? {elem: 'toc-properties', _data: data.properties, _prefix: prefix}
+                    : '',
+
+                data.events.length > 0
+                    ? {elem: 'toc-events', _data: data.events, _prefix: prefix}
+                    : ''
+            ]
+        });
+    },
+
+    elem toc-mod, default: {
+        var data = this.ctx._data,
+            prefix = '#' + this.ctx._blockName + '_' + data.name + '_' + data.value + '-';
+
+        return applyCtx({
+            elem: 'toc-item',
+            link: prefix + 'desc',
+            title: 'Модификатор _' + data.name + '_' + data.value,
+            content: [
+                data.methods.length > 0
+                    ? {elem: 'toc-methods', _data: data.methods, _prefix: prefix}
+                    : '',
+
+                data.properties.length > 0
+                    ? {elem: 'toc-properties', _data: data.properties, _prefix: prefix}
+                    : '',
+
+                data.events.length > 0
+                    ? {elem: 'toc-events', _data: data.events, _prefix: prefix}
+                    : ''
+            ]
+        });
+    },
+
+    elem toc-methods, default: {
+        var prefix = this.ctx._prefix + 'method-';
+        return applyCtx({
+            elem: 'toc-item',
+            link: this.ctx._prefix + 'methods',
+            title: 'Методы',
+            content: this.ctx._data.map(function(method) {
+                return {elem: 'toc-item', link: prefix + method.name, title: method.name};
+            })
+        });
+    },
+
+    elem toc-properties, default: {
+        var prefix = this.ctx._prefix + 'prop-';
+        return applyCtx({
+            elem: 'toc-item',
+            link: this.ctx._prefix + 'props',
+            title: 'Свойства',
+            content: this.ctx._data.map(function(property) {
+                return {elem: 'toc-item', link: prefix + property.name, title: property.name};
+            })
+        });
+    },
+
+    elem toc-events, default: {
+        var prefix = this.ctx._prefix + 'event-';
+        return applyCtx({
+            elem: 'toc-item',
+            link: this.ctx._prefix + 'events',
+            title: 'События',
+            content: this.ctx._data.map(function(event) {
+                return {elem: 'toc-item', link: prefix + event.name, title: event.name};
+            })
+        });
+    },
 
     elem bem-block, content: {
-        var data = this._data;
+        var data = this._data,
+            prefix = data.blockName + '-';
         return [
             {
                 block: 'heading',
                 mods: {level: 2},
+                anchor: prefix + 'desc',
                 content: 'Описание'
             },
             {
@@ -30,42 +132,54 @@ block jsdoc {
                 content: data.description
             },
             data.jsParams.length > 0
-                ? {elem: 'js-params', _data: data.jsParams}
+                ? {elem: 'js-params', _data: data.jsParams, _prefix: prefix}
                 : '',
 
             data.methods.length > 0
-                ? {elem: 'methods', _data: data.methods}
+                ? {elem: 'methods', _data: data.methods, _prefix: prefix}
                 : '',
             data.properties.length > 0
-                ? {elem: 'properties', _data: data.properties}
+                ? {elem: 'properties', _data: data.properties, _prefix: prefix}
                 : '',
 
             data.events.length > 0
-                ? {elem: 'events', _data: data.events}
+                ? {elem: 'events', _data: data.events, _prefix: prefix}
                 : ''
         ];
     }
 
     elem bem-mod, content: {
-        var data = this.ctx._data;
+        var data = this.ctx._data,
+            prefix = this.ctx._blockName + '_' + data.name + '_' + data.value + '-';
+
         return [
             {
-                elem: 'mod-name',
+                block: 'heading',
+                mods: {level: 2},
+                mix: {elem: 'mod-name'},
+                anchor: prefix + 'desc',
                 content: 'Модификатор _' + data.name + '_' + data.value
             },
+
+                
+            //{
+                //elem: 'mod-name',
+                //mix: {block: 'heading', mods: {level: 2}, anchor: prefix + 'desc'},
+                //content: 'Модификатор _' + data.name + '_' + data.value
+            //},
             {
                 elem: 'description',
                 content: data.description
             },
             data.methods.length > 0
-                ? {elem: 'methods', _data: data.methods}
+                ? {elem: 'methods', _data: data.methods, _prefix: prefix}
                 : '',
             data.properties.length > 0
-                ? {elem: 'properties', _data: data.properties}
+                ? {elem: 'properties', _data: data.properties, _preifix: prefix}
                 : '',
 
             data.events.length > 0
-                ? {elem: 'events', _data: data.events}
+                ? {elem: 'events', _data: data.events, _prefix: prefix}
                 : ''
         ]
     }
@@ -75,6 +189,7 @@ block jsdoc {
             {
                 block: 'heading',
                 mods: { level: 3 },
+                anchor: this.ctx._prefix + 'jsparams',
                 content: 'JS-параметры'
             },
             {
@@ -85,12 +200,14 @@ block jsdoc {
     }
 
     elem methods, content: {
-        var data = this.ctx._data;
+        var data = this.ctx._data,
+            prefix = this.ctx._prefix;
 
         return [
             {
                 block: 'heading',
                 mods: { level: 3 },
+                anchor: prefix + 'methods',
                 content: 'Методы'
             },
 
@@ -102,7 +219,9 @@ block jsdoc {
 
 
                         {
-                            elem: 'method-name',
+                            block: 'heading',
+                            mods: { level: 4},
+                            anchor: prefix + 'method-' + method.name,
                             content: method.name
                         },
 
@@ -196,10 +315,12 @@ block jsdoc {
     }
 
     elem properties, content: {
+        var prefix = this.ctx._prefix;
         return [
             {
                 block: 'heading',
                 mods: {level: 3},
+                anchor: prefix + 'props',
                 content: 'Свойства'
             },
 
@@ -208,7 +329,9 @@ block jsdoc {
                     elem: 'property',
                     content: [
                         {
-                            elem: 'prop-name',
+                            block: 'heading',
+                            mods: {level: 4},
+                            anchor: prefix + 'prop-' + prop.name,
                             content: prop.name
                         },
 
@@ -242,31 +365,40 @@ block jsdoc {
         ];
     }
 
-    elem events, content: [
-        {
-            block: 'heading',
-            mods: {level: 3},
-            content: 'События'
-        },
+    elem events, content: {
+        var prefix = this.ctx._prefix;
+        return [
+            {
+                block: 'heading',
+                mods: {level: 3},
+                anchor: prefix + 'events',
+                content: 'События'
+            },
 
-        this.ctx._data.map(function(event) {
-            return [
-                {elem: 'event-name', content: event.name},
-                {elem: 'event-desc', content: event.description},
- 
+            this.ctx._data.map(function(event) {
+                return [
+                    {
+                        block: 'heading',
+                        mods: {level: 4},
+                        anchor: prefix + 'event-' + event.name,
+                        content: event.name
+                    },
+                    {elem: 'event-desc', content: event.description},
+     
 
-                event.params && event.params.length
-                    ? [
-                        {
-                            block: 'heading',
-                            mods: {level: 5},
-                            content: 'Параметры'
-                        },
-                        {elem: 'params-section', _data: event.params}
-                      ]
-                    : ''
-            ]
+                    event.params && event.params.length
+                        ? [
+                            {
+                                block: 'heading',
+                                mods: {level: 5},
+                                content: 'Параметры'
+                            },
+                            {elem: 'params-section', _data: event.params}
+                          ]
+                        : ''
+                ]
 
-        })
-    ]
+            })
+        ];
+    }
 }
