@@ -29,7 +29,7 @@ block catalogue {
                         block: 'link',
                         mix: {block: this.block, elem: this.elem},
                         url: this.ctx.jsdocUrl,
-                        content: 'jsdoc'
+                        content: 'JSDoc'
                     });
             }
 
@@ -47,8 +47,8 @@ block block, this._isShowCase, default: {
         block: 'catalogue',
         elem: 'item',
         content: [
-            {elem: 'item-name', url: ctx.url, jsdocUrl: ctx.jsdocUrl, content: ctx.name},
-            {elelm: 'item-title', content: ctx.title}
+            {elem: 'item-title', tag: 'span', content: ctx.title},
+            {elem: 'item-name', url: ctx.url, jsdocUrl: ctx.jsdocUrl, content: 'Документация'}
         ]
     });
 

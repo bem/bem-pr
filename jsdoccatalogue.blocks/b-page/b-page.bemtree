@@ -17,6 +17,10 @@ block page, default: {
                 elem: 'css',
                 url : '_index.ie.css', // TODO
                 ie  : 'lte IE 9'
+            },
+            {
+                elem: 'css',
+                url: 'http://fonts.googleapis.com/css?family=Open+Sans:400,600&subset=latin,cyrillic'
             }
         ],
         content: [

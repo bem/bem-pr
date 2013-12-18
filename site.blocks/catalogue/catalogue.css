@@ -1,4 +1,44 @@
 .catalogue
 {
-    padding: 10px 20px;
+
+}
+
+.catalogue__item
+{
+    font-family: Tahoma;
+    margin-bottom: -1px;
+    border: 1px solid #eee;
+}
+
+.catalogue__item:hover
+{
+    background: #fff;
+}
+
+.catalogue__item-title
+{
+    font-family: Tahoma;
+    font-size: 18px;
+    color: #636363;
+}
+
+.catalogue__item-title:after
+{
+    content: ': ';
+}
+
+.catalogue__item-name
+{
+    font-size: 14px;
+    padding: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    color: #8D8D8D;
+    border: 1px solid #E9E9E9;
+}
+
+.catalogue__item-name:hover
+{
+    background: #F5F5F5;
+    color: #797878;
 }
