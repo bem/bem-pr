@@ -6,7 +6,7 @@ var PATH = require('path');
 
 exports.getTechs = function() {
     return {
-        'examples-set': 'level-proto',
+        'examples': PATH.resolve(__dirname, '../techs/examples.js'),
         'tests-set'   : 'level-proto',
         'bemdecl.js'  : 'v2/bemdecl.js',
         'deps.js': 'v2/deps.js',
