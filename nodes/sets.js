@@ -218,7 +218,7 @@ module.exports = function(registry) {
 
         getSetTech: function(sourceTech) {
             var sourceToSet = {
-                'examples': 'examples-set',
+                'examples': 'examples',
                 'tests': 'tests-set',
                 'test.js': 'tests-set'
             };

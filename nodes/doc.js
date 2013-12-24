@@ -404,7 +404,7 @@ module.exports = function(registry) {
                 return U.readFile(examplePath)
                     .then(function(exampleDesc) {
                         var url = PATH.join(
-                            _this.rootLevel.getRelPathByObj({block: item.block, tech: 'examples-set'}, 'examples-set'),
+                            _this.rootLevel.getRelPathByObj({block: item.block, tech: 'examples'}, 'examples'),
                             _this.level.getRelByObj(exampleitem));
 
                         // content var will contain array of {url, title) objects with
