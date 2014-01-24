@@ -1,10 +1,15 @@
 'use strict';
 
-exports.baseLevelPath = require.resolve('bem/lib/levels/simple');
+exports.baseLevelName = 'simple';
 
 exports.getTechs = function() {
     return {
-        'examples-set': 'level-proto',
-        'tests-set'   : 'level-proto'
+        'level-proto': 'level-proto',
+        'examples': {
+            baseTechName: 'level-proto'
+        },
+        'tests': {
+            baseTechName: 'level-proto'
+        }
     };
 };

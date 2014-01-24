@@ -8,6 +8,7 @@ var FS = require('fs'),
     PATH = require('path'),
     BEM = require('bem'),
     Q = BEM.require('q'),
+    // XXX: use locally installed underscore
     _ = BEM.require('underscore'),
     LOGGER = BEM.logger,
 

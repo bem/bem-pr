@@ -1,7 +1,7 @@
 'use strict';
 
 var BEM = require('bem'),
-    QFS = BEM.require('q-fs'),
+    QFS = BEM.require('q-io/fs'),
     DEPS = require('bem/lib/techs/v2/deps.js'),
     PATH = require('path');
 
