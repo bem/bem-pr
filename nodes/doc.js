@@ -109,7 +109,6 @@ module.exports = function(registry) {
                 var docSourceNodeCl = registry.getNodeClass(this.getDocSourceNodeClass()),
                     docSourceNodeId = docSourceNodeCl.createId(o);
 
-                docSourceNodeId = docSourceNodeCl.create(o).getId();
                 if (!arch.hasNode(docSourceNodeId)) {
                     // add source node for block which will create a data.json
                     arch.setNode(docSourceNodeCl.create(o));
