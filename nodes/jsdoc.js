@@ -60,8 +60,8 @@ module.exports = function(registry) {
     registry.decl('JsDocSourceNode', 'GeneratedFileNode', {
 
         __constructor: function(o) {
-            o.path += '.jsdoc.json';
             this.__base(o);
+            this.path = o.path + '.jsdoc.json';
             this.rootLevel = createLevel(this.root);
             this.sources = o.sources;
         },
@@ -114,6 +114,11 @@ module.exports = function(registry) {
             return d.promise;
         }
 
+    }, {
+
+        createId: function(o) {
+            return this.__base(U.extend({}, o, {path: o.path + '.jsdoc.json'}));
+        }
     });
 
     /**
@@ -124,12 +129,10 @@ module.exports = function(registry) {
 
         __constructor: function(o) {
 
-            var path = o.path;
-            o.path += '.jsdoc';
-
             this.__base(o);
 
-            this.source = path + '.jsdoc.json';
+            this.path = o.path + '.jsdoc.html';
+            this.source = o.path + '.jsdoc.json';
         },
 
         /**
@@ -192,6 +195,12 @@ module.exports = function(registry) {
                     return context.BEMTREE;
                 });
 
+        }
+
+    },
+    {
+        createId: function(o) {
+            return this.__base(U.extend({}, o, {path: o.path + '.jsdoc'}));
         }
 
     });

@@ -185,9 +185,9 @@ module.exports = function(registry) {
 
         __constructor : function(o) {
             this.source = o.path + '.data.json';
-            o.path += '.html';
 
             this.__base(o);
+            this.path += '.html';
             this.item = o.item;
             this.level = typeof o.level === 'string'? createLevel(o.level): o.level;
             this.sourceBundle = o.sourceBundle;
@@ -273,6 +273,11 @@ module.exports = function(registry) {
 
         }
 
+    }, {
+
+        createId: function(o) {
+            return this.__base(U.extend({}, o, {path: o.path + '.html'}));
+        }
     });
 
     /**
