@@ -75,36 +75,48 @@ module.exports = function(registry) {
 
 
                 // add doc node. It will apply bemhtml, bem.json and data.json and create block's html
-                var docNode = registry.getNodeClass(this.getDocNodeClass())
-                        .create({
+                var o = {
+                        root: this.root,
+                        level: this.path,
+                        path: this.__self.createNodePrefix({
                             root: this.root,
-                            level: this.path,
-                            path: this.__self.createNodePrefix({
-                                root: this.root,
-                                level: this.level,
-                                item: this.item}),
-                             /* pass the name of common bundle which contains bemhtml and bem.json common
-                                for all blocks */
-                            sourceBundle: this.getSourceBundleName(),
-                            item: U.extend({}, _this.item)
-                        }),
+                            level: this.level,
+                            item: this.item}),
+                        /* pass the name of common bundle which contains bemhtml and bem.json common
+                         for all blocks */
+                        sourceBundle: this.getSourceBundleName(),
+                        item: U.extend({}, _this.item)
+                    },
+                    docNodeCl = registry.getNodeClass(this.getDocNodeClass()),
+                    docNodeId = docNodeCl.createId(o);
 
+                if (!arch.hasNode(docNodeId)) {
+                    arch.setNode(docNodeCl.create(o));
+                }
+
+                o = {
+                    root: this.root,
+                    level: this.path,
+                    item: U.extend({}, _this.item),
+                    path: this.__self.createNodePrefix({
+                        root: this.root,
+                        level: this.level,
+                        item: this.item}),
+                    levels: this.levels,
+                    sources: this.sourceItems
+                };
+
+                var docSourceNodeCl = registry.getNodeClass(this.getDocSourceNodeClass()),
+                    docSourceNodeId = docSourceNodeCl.createId(o);
+
+                docSourceNodeId = docSourceNodeCl.create(o).getId();
+                if (!arch.hasNode(docSourceNodeId)) {
                     // add source node for block which will create a data.json
-                    docSourceNode = registry.getNodeClass(this.getDocSourceNodeClass())
-                        .create({
-                            root: this.root,
-                            level: this.path,
-                            item: U.extend({}, _this.item),
-                            path: this.__self.createNodePrefix({
-                                root: this.root,
-                                level: this.level,
-                                item: this.item}),
-                            levels: this.levels,
-                            sources: this.sourceItems
-                        });
+                    arch.setNode(docSourceNodeCl.create(o));
+                }
 
-                arch.setNode(docSourceNode);
-                arch.setNode(docNode, groupId, docSourceNode.getId());
+                arch.addParents(docNodeId, groupId)
+                    .addChildren(docNodeId, docSourceNodeId);
 
                 // getSourceBundleName() returns non empty string link DocNode to returned common bundle
                 if (this.getSourceBundleName()) {
@@ -126,7 +138,7 @@ module.exports = function(registry) {
 
                     // skip linking if this node is catalogue or index
                     if (groupId !== cat && groupId !== index) {
-                        arch.addChildren(docNode.getId(), cat);
+                        arch.addChildren(docNodeId, cat);
                     }
                 }
             }
