@@ -1,3 +1,6 @@
 [submodule "libs/bem-bl"]
 	path = libs/bem-bl
 	url = git@github.com:bem/bem-bl.git
+[submodule "libs/bem-json"]
+	path = libs/bem-json
+	url = https://github.com/delfrrr/bem-json.git
