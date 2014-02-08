@@ -334,6 +334,12 @@ module.exports = function(registry) {
                                     });
                             } else {
                                 content = _this._readExamples(item);
+                                // Remove elem/mod/val information to put their examples
+                                // directly within the block in the object tree which is being
+                                // built bellow.
+                                delete item.elem;
+                                delete item.mod;
+                                delete item.val;
                             }
 
                             /**
@@ -407,6 +413,9 @@ module.exports = function(registry) {
             var _this = this,
                 exampleLevel = createLevel(
                     createLevel(item.level).getPathByObj(item, item.tech)
+                ),
+                setExampleLevel = createLevel(
+                    PATH.join(_this.level.dir, _this.level.getRelPathByObj(item, 'examples'))
                 );
 
             // scan for title.txt within example to use its content as description
@@ -415,18 +424,19 @@ module.exports = function(registry) {
             })
             .map(function(exampleitem) {
 
-                var examplePath = exampleLevel.getPathByObj(exampleitem, exampleitem.suffix.substring(1));
-
-                return U.readFile(examplePath)
+                return U.readFile(exampleLevel.getPathByObj(exampleitem, exampleitem.suffix.substring(1)))
                     .then(function(exampleDesc) {
-                        var url = PATH.join(
-                            _this.rootLevel.getRelPathByObj({block: item.block, tech: 'examples'}, 'examples'),
-                            _this.level.getRelByObj(exampleitem));
-
                         // content var will contain array of {url, title) objects with
                         // example link and description
                         return {
-                            url: url,
+                            url: PATH.relative(
+                                     PATH.join(
+                                         _this.root,
+                                         PATH.dirname(_this.path)),
+                                     PATH.join(
+                                         _this.level.getPathByObj(item, 'examples'),
+                                         setExampleLevel.getRelByObj(exampleitem, 'examples')
+                                 )),
                             title: exampleDesc
                         };
                     });
