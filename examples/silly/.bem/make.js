@@ -65,7 +65,7 @@ function extendMake(registry) {
 
     registry.decl('SetsLevelNode', {
         getSourceItemTechs: function() {
-            return ['examples', 'test.js'];
+            return ['examples'];
         }
     });
 
