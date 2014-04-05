@@ -22,10 +22,10 @@
     "bem-environ": "~1.4.0"
   },
   "devDependencies": {
-    "bem": "~0.7.2"
+    "bem": "^0.8.0"
   },
   "peerDependencies": {
-    "bem": "~0.7.2"
+    "bem": "^0.8.0"
   },
   "keywords": [
     "bem",
