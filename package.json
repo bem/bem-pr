@@ -1,7 +1,7 @@
 {
   "name": "bem-sets",
   "description": "bem make extensions to build examples, tests and docs for sets of levels",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/bem/bem-sets.git"
