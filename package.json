@@ -11,7 +11,7 @@
     "mocha-phantomjs": "~2.0.2",
     "marked": "~0.2.5",
     "shmakowiki": "~0.4.0",
-    "jsdoc": "3.3.0-alpha5",
+    "jsdoc": "3.3.0-alpha8",
     "jsdoc-bem": "~0.2.0",
     "vow": "~0.3.12",
     "bemhtml-compat": "~0.0.4",
