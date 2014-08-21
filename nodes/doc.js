@@ -392,6 +392,7 @@ module.exports = function(registry) {
                                 obj[key] = obj[key] || [];
                                 obj[key].push({
                                     level: item.level,
+                                    tech: item.tech,
                                     content: content
                                 })
                             })
